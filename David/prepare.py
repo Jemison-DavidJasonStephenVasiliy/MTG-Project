@@ -118,6 +118,11 @@ def extract_price_data(df):
     df['eur'] = df['eur'].fillna(0)
     df['eur_foil'] = df.prices.apply(lambda r : r['eur_foil'])
     df['eur_foil'] = df['eur_foil'].fillna(0)
+    #cast to a float value
+    df['usd'] = df.usd.astype(float)
+    df['usd_foil'] = df.usd_foil.astype(float)
+    df['eur'] = df.usd.astype(float)
+    df['eur_foil'] = df.usd_foil.astype(float)
     #return the dataframe
     return df
 
