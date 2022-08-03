@@ -1,3 +1,11 @@
+# model_constants.py This file holds some of the 
+# constants that will be used in model.py; 
+# note: this is mainly to clean up the top of the 
+# model.py file
+
+
+### GROUPS OF COLUMNS TO PREPARE DATAFRAME FOR MODELING
+
 #columns that will not be used in models
 DROP_COLUMNS = [
     'mana_cost',
@@ -60,3 +68,14 @@ ENCODED_COLUMNS = [
     'premodern_legality',
     'card_type'
 ]
+
+# contains the columns that will be scaled
+SCALED_COLUMNS = [
+    'cmc', 
+    'life_modifier', 
+    'hand_modifier',
+    'edhrec_rank', 
+    'penny_rank'
+]
+#for now, drop them
+DROP_COLUMNS += SCALED_COLUMNS
