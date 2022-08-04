@@ -54,19 +54,24 @@ def test_model_function(train, validate):
 
 ### MODEL FUNCTIONS
 
-def model_loop(train, validate):
+def model_loop(train, validate, return_predictions = True):
     outputs = []
-    train_predictions = train[['id', 'usd']].copy()
-    validate_predictions = validate[['id', 'usd']].copy()
+    train_predictions = train[['id', 'name', 'usd']].copy()
+    validate_predictions = validate[['id', 'name', 'usd']].copy()
     #make baseline model
     output_mean, output_median = make_baseline_model(train, validate)
     outputs.append(output_mean)
     outputs.append(output_median)
     X_train, y_train, X_val, y_val = scale_and_make_X_and_y(train, validate)
     for model_item in model_constants.MODELS:
-        output = make_model(X_train, y_train, X_val, y_val, model_item['model'], model_item['name'], return_predictions = False)
+        output, train_predict, val_predict = make_model(X_train, y_train, X_val, y_val, model_item['model'], model_item['name'], return_predictions = return_predictions)
+        train_predictions[f"{model_item['name']}_predictions"] = train_predict['predicted']
+        validate_predictions[f"{model_item['name']}_predictions"] = val_predict['predicted']
         outputs.append(output)
-    return outputs
+    if return_predictions:
+        return outputs, train_predictions, validate_predictions
+    else:
+        return outputs
 
 def make_model(X_train, y_train, X_val, y_val, model, model_name, return_predictions = True):
     model = model.fit(X_train, y_train['usd'])
@@ -97,7 +102,7 @@ def make_baseline_model(train, validate, return_df = False):
     output_mean = evaluate_train_validate_model(baseline_model_mean, baseline_model_val_mean, 'baseline_mean')
     output_median = evaluate_train_validate_model(baseline_model_median, baseline_model_val_median, 'baseline_median')
     if return_df:
-        return pd.DataFrame(outputs)
+        return pd.DataFrame([output_mean, output_median])
     else:
         return output_mean, output_median
 
