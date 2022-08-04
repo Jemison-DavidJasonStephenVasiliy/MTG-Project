@@ -60,9 +60,9 @@ The files within the repository are organized as follows. The /images and /sandb
 ## Data Dictionary
 Below are the features that we used after preparing our dataset acquired from the Scryfall API.  
 
-                                                                      |
+| Column          | Data type | Description                                                                                 |
 |-----------------|-----------|---------------------------------------------------------------------------------------------|
-| object          | String    | A content type for this object, always card.
+| object          | String    | A content type for this object, always card.                                                |
 | id              | UUID      | A unique ID for this bulk item.                                                             |
 | uri             | URI       | The Scryfall API URI for this file.                                                         |
 | type            | String    | A computer-readable string for the kind of bulk item.                                       |
@@ -135,8 +135,8 @@ $H_a$ : Cards of $raritytype$ and $cardtype$ have a mean value greater than the 
 $H_0$: The total amount of cards created by artist x is = to the value of cards there cards.<br>
 $H_a$: The total amount of cards created by artist x is not = to the value of cards there cards.
 
-𝐻0: <br>
-𝐻𝑎: 
+$H_0$: <br>
+$H_a$: 
 
 <kbd>[Back to Table of Contents](https://github.com/Jemison-DavidJasonStephenVasiliy/MTG-Projecty#table-of-contents)</kbd>
 ## Project Steps
@@ -164,29 +164,28 @@ Functions to prepare the dataframe are stored in two seperate files depending on
 During exploration we looked at these features:
 * 
 * 
-*
+* 
 
 ![Card Popularity](https://github.com/Jemison-DavidJasonStephenVasiliy/MTG-Project/(tdb)
 
 ![Popular Formats](https://github.com/Jemison-DavidJasonStephenVasiliy/MTG-Project/(tbd)
 
-![Popular Key Signatures](https://github.com/Jemison-DavidJasonStephenVasiliy/MTG-Project/(tbd)
+![Card Frame Styles](https://github.com/Jemison-DavidJasonStephenVasiliy/MTG-Project/(tbd)
 
 ### Model
-First we made a baseline model to compare our model performances. The baseline was based on the average popularity for a track in our train split, which means our baseline prediction came out to a popularity of 38. The baseline model had an RMSE of 22.8 on the train split. We created various regression models and fit to the train data.  
+(text)  
 
 **Feature Groups**
-We used three sets of feauture groups. 
-- Select K best: selects features according to the k highest scores (top 5)
-- Recursive Feature Elimination: features that perform best on a simple linear regression model (top 5)
-- Combination (unique features from both groups, 7 features)
+We used these sets of feauture groups. 
+- 
+- 
+- 
 
 **Models Evaluated**
 * OLS Linear Regression
-* LASSO + LARS
-* Polynomial Squared + Linear Regression
-* Support Vector Regression using RBF Kernel
-* General Linear Model with Normal Distribution
+* 
+* 
+
 
 **Evaluation Metric**  
 (text)
@@ -194,9 +193,9 @@ We used three sets of feauture groups.
 ![Model-Error](https://github.com/Jemison-DavidJasonStephenVasiliy/MTG-Project/(tbd)
 
 **Final Model:**  
-Polynomial Squared + Linear Regression was our final model we performed on test, predicting 6% better than the baseline.  
+(Model types) was our final model we performed on test, predicting ##% better than the baseline.  
 
-| Model                         | Train RMSE | Validate RMSE | Test RMSE |
+| Model                         | Train  | Validate  | Test  |
 |-------------------------------|------------|---------------|-----------|
 | OLS Linear Regression         |  |       |    |
 |          |   |        |           |
