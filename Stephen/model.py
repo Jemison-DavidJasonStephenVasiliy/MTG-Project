@@ -1,5 +1,13 @@
+from math import sqrt
+
 import pandas as pd
-from sklearn.preprocessing import StandardScaler, RobustScaler, MinMaxScaler
+from scipy import stats
+import sklearn.metrics as metrics
+from sklearn.neighbors import RadiusNeighborsRegressor, KNeighborsRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.linear_model import LinearRegression, LassoLars
+from sklearn.svm import LinearSVR
+
 import model_constants
 
 ### GLOBAL CONSTANTS
@@ -14,6 +22,107 @@ MODEL_STRATEGY_DICTIONARY = {
 #holds the model strategy types
 MODEL_STRATEGIES = []
 
+### MODEL MAKER
+
+def model_maker(train, validate, return_predictions = False):
+    outputs = []
+    train_predictions = train[['id', 'usd']].copy()
+    validate_predictions = validate[['id', 'usd']].copy()
+    #make baseline model
+    output_mean, output_median = make_baseline_model(train, validate)
+    outputs.append(output_mean)
+    outputs.append(output_median)
+    X_train, y_train, X_val, y_val = scale_and_make_X_and_y(train, validate)
+    # make a simple linear svr
+    output_lsvr = make_linearsvr_model(X_train, y_train, X_val, y_val, return_predictions = return_predictions)
+    outputs.append(output_lsvr)
+    return outputs
+
+def test_model_function(train, validate):
+    outputs = [] 
+    train_predictions = train[['id', 'usd']].copy()
+    validate_predictions = validate[['id', 'usd']].copy()
+    #make baseline model
+    output_mean, output_median = make_baseline_model(train, validate)
+    outputs.append(output_mean)
+    outputs.append(output_median)
+    #add model
+    X_train, y_train, X_val, y_val = scale_and_make_X_and_y(train, validate)
+    output = make_decisiontree_model_weighted(X_train, y_train, X_val, y_val, return_predictions = False)
+    outputs.append(output)
+    return outputs
+
+### MODEL FUNCTIONS
+
+def model_loop(train, validate):
+    outputs = []
+    train_predictions = train[['id', 'usd']].copy()
+    validate_predictions = validate[['id', 'usd']].copy()
+    #make baseline model
+    output_mean, output_median = make_baseline_model(train, validate)
+    outputs.append(output_mean)
+    outputs.append(output_median)
+    X_train, y_train, X_val, y_val = scale_and_make_X_and_y(train, validate)
+    for model_item in model_constants.MODELS:
+        output = make_model(X_train, y_train, X_val, y_val, model_item['model'], model_item['name'], return_predictions = False)
+        outputs.append(output)
+    return outputs
+
+def make_model(X_train, y_train, X_val, y_val, model, model_name, return_predictions = True):
+    model = model.fit(X_train, y_train['usd'])
+    y_train['predicted'] = model.predict(X_train)
+    y_val['predicted'] = model.predict(X_val)
+    output = evaluate_train_validate_model(y_train, y_val, model_name)
+    if return_predictions:
+        return output, y_train, y_val
+    else:
+        return output 
+
+### BASELINE MODEL
+
+def make_baseline_model(train, validate, return_df = False):
+    """
+    Creates two baseline model, one based on mean and one based on median.  Returns a dataframe
+    Containing their evaluation metrics.
+    """
+    outputs = []
+    baseline_model_mean = train.loc[:, ['id', 'usd']]
+    baseline_model_median = train.loc[:, ['id', 'usd']]
+    baseline_model_val_mean = validate.loc[:, ['id', 'usd']]
+    baseline_model_val_median = validate.loc[:, ['id', 'usd']]
+    baseline_model_mean['predicted'] = train.usd.mean()
+    baseline_model_median['predicted'] = train.usd.median()
+    baseline_model_val_mean['predicted'] = train.usd.mean()
+    baseline_model_val_median['predicted'] = train.usd.median()
+    output_mean = evaluate_train_validate_model(baseline_model_mean, baseline_model_val_mean, 'baseline_mean')
+    output_median = evaluate_train_validate_model(baseline_model_median, baseline_model_val_median, 'baseline_median')
+    if return_df:
+        return pd.DataFrame(outputs)
+    else:
+        return output_mean, output_median
+
+### MODEL EVALUATION FUNCTION
+
+def evaluate_train_validate_model(model_train, model_validate, model_name):
+    #calculate the metrics to evaluate
+    mse2_train = metrics.mean_squared_error(model_train['usd'], model_train['predicted'])
+    mse2_validate = metrics.mean_squared_error(model_validate['usd'], model_validate['predicted'])
+    r2_train = metrics.r2_score(model_train['usd'], model_train['predicted'])
+    r2_validate = metrics.r2_score(model_validate['usd'], model_validate['predicted'])
+    evs_train = metrics.explained_variance_score(model_train['usd'], model_train['predicted'])
+    evs_validate = metrics.explained_variance_score(model_validate['usd'], model_validate['predicted'])
+    #store in a dictionary and return to call
+    model_metrics = {
+        'model':model_name,
+        'train_RMSE':sqrt(mse2_train),
+        'train_r2':r2_train,
+        'train_explained_variance':evs_train,
+        'validate_RMSE':sqrt(mse2_validate),
+        'validate_r2':r2_validate,
+        'validate_explained_variance':evs_validate
+    }
+    return model_metrics
+
 ### FUNCTIONS TO MAKE COLUMNS FOR MODEL
 
 def scale_and_make_X_and_y(train, validate):
@@ -23,7 +132,7 @@ def scale_and_make_X_and_y(train, validate):
     """
     #drop the target variable, usd
     X_train = train.drop(columns=['id', 'name', 'usd'])
-    X_val = train.drop(columns=['id', 'name', 'usd'])
+    X_val = validate.drop(columns=['id', 'name', 'usd'])
     #make the scaler and fit it
     # scaler = StandardScaler()
     # scaler = scaler.fit(train[model_constants.SCALED_COLUMNS])
@@ -40,7 +149,9 @@ def scale_and_make_X_and_y(train, validate):
 
 def prepare_model_df(df):
     """
-    Flow control function to prepare a dataframe
+    Flow control function to prepare the dataframe for modeling
+    Note that the entire dataframe needs to be passed and then 
+    split via the prepare file
     """
     # make/drop columns for the model
     df = make_legality_columns(df)
@@ -49,13 +160,6 @@ def prepare_model_df(df):
     df = drop_non_modeling_columns(df)
     # transform by encoding and scaling
     df = encode_columns(df)
-    return df
-
-def scale_columns(df):
-    """
-    Scales the numeric columns from the SCALED_COLUMNS
-    constant from the model_constants module
-    """
     return df
 
 def encode_columns(df):
@@ -137,3 +241,97 @@ def make_list_to_str_columns(df):
         df[col_name] = df[col_name].apply(lambda r : '_'.join(r) if isinstance(r, list) else r)
         df[col_name] = df[col_name].apply(lambda r : 'none' if r == '' else r)
     return df
+
+# # TREE MODELS
+
+# def make_decisiontree_model_weighted(X_train, y_train, X_val, y_val, return_predictions = True):
+#     dt = DecisionTreeRegressor()
+#     dt = dt.fit(X_train, y_train['usd'])
+#     y_train['predicted'] = dt.predict(X_train)
+#     y_val['predicted'] = dt.predict(X_val)
+#     output = evaluate_train_validate_model(y_train, y_val, 'DecisionTreeRegressor')
+#     if return_predictions:
+#         return output, y_train, y_val
+#     else:
+#         return output  
+
+# # NEIGHBORS MODELS
+
+# def make_kneighbors_model_weighted(X_train, y_train, X_val, y_val, return_predictions = True):
+#     nn = KNeighborsRegressor(weights = 'distance')
+#     nn = nn.fit(X_train, y_train['usd'])
+#     y_train['predicted'] = nn.predict(X_train)
+#     y_val['predicted'] = nn.predict(X_val)
+#     output = evaluate_train_validate_model(y_train, y_val, 'KNeighborsRegressor_weighted')
+#     if return_predictions:
+#         return output, y_train, y_val
+#     else:
+#         return output  
+
+# def make_kneighbors_model(X_train, y_train, X_val, y_val, return_predictions = True):
+#     nn = KNeighborsRegressor()
+#     nn = nn.fit(X_train, y_train['usd'])
+#     y_train['predicted'] = nn.predict(X_train)
+#     y_val['predicted'] = nn.predict(X_val)
+#     output = evaluate_train_validate_model(y_train, y_val, 'KNeighborsRegressor')
+#     if return_predictions:
+#         return output, y_train, y_val
+#     else:
+#         return output    
+
+# def make_radiusneighbors_model_weighted(X_train, y_train, X_val, y_val, return_predictions = True):
+#     rn = RadiusNeighborsRegressor(radius = 5, weights = 'distance')
+#     rn = rn.fit(X_train, y_train['usd'])
+#     y_train['predicted'] = rn.predict(X_train)
+#     y_val['predicted'] = rn.predict(X_val)
+#     output = evaluate_train_validate_model(y_train, y_val, 'RadiusNeighborsRegressor_weighted')
+#     if return_predictions:
+#         return output, y_train, y_val
+#     else:
+#         return output
+
+# def make_radiusneighbors_model(X_train, y_train, X_val, y_val, return_predictions = True):
+#     rn = RadiusNeighborsRegressor(radius = 5)
+#     rn = rn.fit(X_train, y_train['usd'])
+#     y_train['predicted'] = rn.predict(X_train)
+#     y_val['predicted'] = rn.predict(X_val)
+#     output = evaluate_train_validate_model(y_train, y_val, 'RadiusNeighborsRegressor')
+#     if return_predictions:
+#         return output, y_train, y_val
+#     else:
+#         return output
+
+# #LINEAR MODELS
+
+# def make_linearsvr_model(X_train, y_train, X_val, y_val, return_predictions = True):
+#     lsvr = LinearSVR()
+#     lsvr = lsvr.fit(X_train, y_train['usd'])
+#     y_train['predicted'] = lsvr.predict(X_train)
+#     y_val['predicted'] = lsvr.predict(X_val)
+#     output = evaluate_train_validate_model(y_train, y_val, 'LinearSVR')
+#     if return_predictions:
+#         return output, y_train, y_val
+#     else:
+#         return output
+    
+# def make_linear_regression_model(X_train, y_train, X_val, y_val, return_predictions = True):
+#     lr = LinearRegression()
+#     lr = lr.fit(X_train, y_train['usd'])
+#     y_train['predicted'] = lr.predict(X_train)
+#     y_val['predicted'] = lr.predict(X_val)
+#     output = evaluate_train_validate_model(y_train, y_val, 'LinearRegression')
+#     if return_predictions:
+#         return output, y_train, y_val
+#     else:
+#         return output
+    
+# def make_lassor_lars(X_train, y_train, X_val, y_val, return_predictions = True):
+#     llars = LassoLars()
+#     llars = llars.fit(X_train, y_train['usd'])
+#     y_train['predicted'] = llars.predict(X_train)
+#     y_val['predicted'] = llars.predict(X_val)
+#     output = evaluate_train_validate_model(y_train, y_val, 'LassoLars')
+#     if return_predictions:
+#         return output, y_train, y_val
+#     else:
+#         return output
