@@ -23,7 +23,7 @@ def split_data(df):
     #make train and test
     train, validate = train_test_split(df, train_size = 0.75, random_state=RAND_SEED)
     #make validate
-    validate, test = train_test_split(train, train_size = 0.5, random_state=RAND_SEED)
+    validate, test = train_test_split(validate, train_size = 0.5, random_state=RAND_SEED)
     return train, validate, test
     
 
