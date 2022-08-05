@@ -8,6 +8,8 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.linear_model import LinearRegression, LassoLars
 from sklearn.svm import LinearSVR
 from sklearn.ensemble import RandomForestRegressor
+# ensures that the models are always the same as in the notebook
+RAND_SEED = 1729 
 
 ### MODEL CONSTANTS
 
@@ -15,7 +17,7 @@ from sklearn.ensemble import RandomForestRegressor
 MODELS = [
     {
         'name':'DecisionTreeRegressor',
-        'model':DecisionTreeRegressor()
+        'model':DecisionTreeRegressor(random_state = RAND_SEED)
     },
     {
         'name':'LinearSVR',
@@ -47,7 +49,7 @@ MODELS = [
     },
     {
         'name':'RandomForestRegressor',
-        'model':RandomForestRegressor()
+        'model':RandomForestRegressor(random_state = RAND_SEED)
     }
 ]
 
