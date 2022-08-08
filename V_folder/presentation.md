@@ -19,7 +19,41 @@ Reprinted cards are more expensive then the original.
 It was surprising that foils cost less then the non-foils.
 That can be attributed to the fact that older MTG cards existed and were printed before the foil technique was introduced. The majority of the cards have the base black border and normal frames. We would like to test features in what combinations are effective in predicting price. This can include what production years or set types. 
 
+## Formalize and summarize
+Find 5 central connecting features to expand on.
+
+## Model interpretation:
+We have a working model! Its so cool!!!!! We made a computer predict a price based off of what the card looks like. Conceptually it sounds like magic but that's neither here nor there. 
+The first card I found was "Pyrmaids" it caught my eye because of the huge disperity between the prediction and actual price. In the dataset Pyramids is valued at $175.77 usd. The predicted value from our model says it is worth 12.08! How funny! On one market there are 130 of these cards <a href="https://www.cardmarket.com/en/Magic/Products/Singles/Arabian-Nights/Pyramids">here</a>. So what the model is telling us is that while it may be a solid card that is worth getting, it shouldn't be this high. Now that I think about it I am not even sure what metrics are being measured here. Because pyramid seems like a solid card in any control deck.  But I do not know if the model can compute game value worth. Like maybe that is a metric that exists somewhere. Say for example a 3 mana land corrupt. It can also be coincidently expensive because it is a collectors item. So the model takes in all of the features. It focuses on if it ion the paper game, legalities. Select K-best features rarity if in just paper and legalities, there is a security standpoint. The model's strengths are  in (48%  of the predictions are within  a dime of the price)(when it crosser the upper quartile threshold the accuracy decreases dramatically(really past the median price))
+
+### editor's translation
+We made a computer predict a price based on what the card looks like. Conceptually it sounds like magic but that's neither here nor there. 
+
+The first card I found was called Pyramids. It caught my eye because of the huge disparity between the prediction and actual price. In the dataset, Pyramids is valued at $175.77. Meanwhile, the predicted value from our model says it is worth $12.08! How funny! 
+
+In one market, there are 130 of these cards (a link). So, the model is telling us that, while it may be a solid card worth getting, its price shouldn't be this high. Now that I think about it though, I am not even sure what metrics are being measured here. Pyramids cards seem like a solid addition to any control deck, but I do not know if the model can compute game value. But maybe that is a metric that exists somewhere. For example, a 3 mana land corrupt can also be expensive because it is a collectors item. 
+
+The model takes in all of the features. It focuses on if it is on the paper game, legalities. Select K-best features rarity if in just paper and legalities, there is a security standpoint. The model's strengths are in (48% of the predictions are within  a dime of the price)(when it crosses the upper quartile threshold the accuracy decreases dramatically(really past the median price)
+
+## Revisit the elavator
+
+
+
+
+
+## an experpt on legalities
+What do the legalitites mean. What are they, when have they statred? What are the rules to them. Have they changed an evloved as time has gone on?
+
+
 ---------
 
 (Anecdotes: there are no exclusively foiled cards....interesting). 
 In the games column there are many of the same entries with the words mixed
+
+We made a computer predict a price based on what the card looks like. Conceptually it sounds like magic but that's neither here nor there. 
+
+The first card I found was called Pyramids. It caught my eye because of the huge disparity between the prediction and actual price. In the dataset, Pyramids is valued at $175.77. Meanwhile, the predicted value from our model says it is worth $12.08! How funny! 
+
+In one market, there are 130 of these cards (a link). So, the model is telling us that, while it may be a solid card worth getting, its price shouldn't be this high. Now that I think about it though, I am not even sure what metrics are being measured here. Pyramids cards seem like a solid addition to any control deck, but I do not know if the model can compute game value. But maybe that is a metric that exists somewhere. For example, a 3 mana land corrupt can also be expensive because it is a collectors item. 
+
+The model takes in all of the features. It focuses on if it is on the paper game, legalities. Select K-best features rarity if in just paper and legalities, there is a security standpoint. The model's strengths are in (48% of the predictions are within  a dime of the price)(when it crosses the upper quartile threshold the accuracy decreases dramatically(really past the median price)
