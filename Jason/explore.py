@@ -66,7 +66,7 @@ def nonfoil_only_or_not_viz(df):
 
 def q1_hypothesis_test(df):
     '''
-    Hypothesis testing for question 1 using Two-sample T-Test with a 95% confidence interval.
+    Hypothesis testing for question one using Two-sample T-Test with a 95% confidence interval.
     '''
     # Sets alpha to 0.05 for 95% Confidence Interval
     α = 0.05

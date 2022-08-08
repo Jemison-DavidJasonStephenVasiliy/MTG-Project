@@ -98,7 +98,7 @@ We engineered the features seen below from the original data using domain expert
 <kbd>[Back to Table of Contents](https://github.com/SpotiScryers/SpotiScry#table-of-contents)</kbd>
 ## Initial Thoughts & Hypotheses
 ### Thoughts
-* What are does game style have on price?
+* What affect does game style have on price?
 * Does the artist affect the price?
 * Is there a difference in price between sets?
 * What affect does reprint have on the price?
