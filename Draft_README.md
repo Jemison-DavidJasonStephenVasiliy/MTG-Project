@@ -26,12 +26,15 @@ What makes a magic card valuable?. You can check out our presentation [here](htt
 ### Background
 What makes a card valuable? According to MTGGoldfish News [here](https://www.mtggoldfish.com/articles),
 >    "Determining a collectible cards value is not necessarily a straight forward affair.  Often a cards popularity is affected by 
-> the design of the card or the desirability of the art itself from esteemed artists."  
+> the design of the card or the desirability of the art itself from esteemed artists."
+
+[Here's](https://www.notion.so/jason-r-turner/Magic-FAQs-5315dcd4ad564d6ea92f6e9f10d99b6a) a link to some Magic FAQs that helped us understand the fundamentals involved to make informed decisions in our project 
+
 
 By analyzing Scryfall's API data, we will determine what influences a card's value.
 
 ### The Data 
-Our dataset came from a Scryfall.com. It includes over 20,000 functionally unique cards from a collectible card game starting from the 90s till present day. 
+Our dataset came from [https://scryfall.com/docs/api/bulk-data](https://scryfall.com/docs/api/bulk-data). It includes over 20,000 functionally unique cards from a collectible card game starting from the 90s till present day. 
 
 
 ### Deliverables
@@ -58,7 +61,7 @@ The files within the repository are organized as follows. The /images and /sandb
 <kbd>[Back to Table of Contents](https://github.com/Jemison-DavidJasonStephenVasiliy/MTG-Project#table-of-contents)</kbd>
 
 ## Data Dictionary
-Below are the features that we used after preparing our dataset acquired from the Scryfall API.  
+Below are the features that we used after preparing our dataset acquired from the Scryfall API which are defined on their [Card Objects](https://scryfall.com/docs/api/cards) site.  
 
 | Column          | Data type | Description                                                                                 |
 |-----------------|-----------|---------------------------------------------------------------------------------------------|
@@ -98,7 +101,7 @@ We engineered the features seen below from the original data using domain expert
 <kbd>[Back to Table of Contents](https://github.com/SpotiScryers/SpotiScry#table-of-contents)</kbd>
 ## Initial Thoughts & Hypotheses
 ### Thoughts
-* What are does game style have on price?
+* What affect does game style have on price?
 * Does the artist affect the price?
 * Is there a difference in price between sets?
 * What affect does reprint have on the price?
