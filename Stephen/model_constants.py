@@ -69,21 +69,21 @@ DROP_COLUMNS = [
     'legalities',
     'artist',
     'power',
-    'toughness'
+    'toughness',
+    'collector_number'
 ]
 
 # columns that will be encoded
 ENCODED_COLUMNS = [
     'lang',
-    'layout',
-    'image_status',
+    # 'layout',
+    # 'image_status',
     'colors',
-    'color_identity',
+    # 'color_identity',
     'games',
     'finishes',
-    'set_name',
+    # 'set_name',
     'set_type',
-    'collector_number',
     'rarity',
     'border_color',
     'frame',
@@ -93,9 +93,9 @@ ENCODED_COLUMNS = [
     'watermark',
     'frame_effects',
     'loyalty',
-    'printed_name',
+    # 'printed_name',
     'color_indicator',
-    'flavor_name',
+    # 'flavor_name',
     'standard_legality',
     'future_legality',
     'historic_legality',
@@ -128,3 +128,13 @@ SCALED_COLUMNS = [
 ]
 #for now, drop them
 DROP_COLUMNS += SCALED_COLUMNS
+
+#testing to drop more columns:
+DROP_COLUMNS += [   
+    'layout',
+    'image_status',
+    'flavor_name',
+    'printed_name',
+    'set_name',
+    'color_identity'
+]

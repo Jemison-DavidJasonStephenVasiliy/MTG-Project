@@ -8,6 +8,8 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.linear_model import LinearRegression, LassoLars
 from sklearn.svm import LinearSVR
 
+from sklearn.preprocessing import OrdinalEncoder
+
 import model_constants
 
 ### GLOBAL CONSTANTS
@@ -116,13 +118,17 @@ def evaluate_train_validate_model(model_train, model_validate, model_name):
     r2_validate = metrics.r2_score(model_validate['usd'], model_validate['predicted'])
     evs_train = metrics.explained_variance_score(model_train['usd'], model_train['predicted'])
     evs_validate = metrics.explained_variance_score(model_validate['usd'], model_validate['predicted'])
+    mae_train = metrics.mean_absolute_error(model_train['usd'], model_train['predicted'])
+    mae_validate = metrics.mean_absolute_error(model_validate['usd'], model_validate['predicted'])
     #store in a dictionary and return to call
     model_metrics = {
         'model':model_name,
         'train_RMSE':sqrt(mse2_train),
+        'train_MAE':mae_train,
         'train_r2':r2_train,
         'train_explained_variance':evs_train,
         'validate_RMSE':sqrt(mse2_validate),
+        'validate_MAE':mae_validate,
         'validate_r2':r2_validate,
         'validate_explained_variance':evs_validate
     }
