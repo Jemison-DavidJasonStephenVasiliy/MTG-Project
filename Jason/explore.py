@@ -14,9 +14,8 @@ import re
 ### Vasiliy's explore and hypothesis functions
 def get_legalites_chart(df):
     '''
-To hammer out the visuals here I will have to go over the code that has gotten me the results:
-To do so would require starting with identifying where tey meet
-I started from the top and got all of the peices assembled
+    To hammer out the visuals here I will have to go over the code that has gotten me the results: To do so would require starting with identifying where they meet
+I started from the top and got all of the peices assembled.
     '''
     df['standard'] = df.legalities.apply(lambda r : r['standard'])
     df['future'] = df.legalities.apply(lambda r : r['future'])
@@ -85,7 +84,20 @@ I started from the top and got all of the peices assembled
 # get_legalites_chart(train)
 
 ## Q1 Hypothesis function goes here
+def hypothesis_test_legalities(df, alpha = 0.05):
+    '''
+    One sample T-Test.
+    '''
+    t, p = stats.ttest_1samp(df.usd, df[df.standard == "legal"].usd.mean())
+    print(t, p/2, alpha)
 
+    if p/2 > alpha:
+        print("We fail to reject the null hypothesis")
+    elif t < 0:
+        print("We fail to reject the null hypothesis")
+    else:
+        print("We reject the null hypothesis")
+    
     
 def top_7_sets(df):
     '''
@@ -102,12 +114,35 @@ def top_7_sets(df):
 # top_7_sets(train)
 
 ## Q2 Hypothesis function goes here
+def hypothesis_test_set_name(df, alpha = 0.05):
+    '''
+    One sample T-Test.
+    '''
+    t, p = stats.ttest_1samp(df.usd, df[df.set_name == "Mirrodin"].usd.mean())
+    print(t, p/2, alpha)
+
+    if p/2 > alpha:
+        print("We fail to reject the null hypothesis")
+    elif t < 0:
+        print("We fail to reject the null hypothesis")
+    else:
+        print("We reject the null hypothesis")
 
 ## Q3 Visualization function goes here
-
-def hypothesis_test_years(df, alpha = 0.05):
+def cmc_by_price(df):
     '''
-    One sample t-test
+    NEEDS DOC STRING!
+    '''
+    plt.figure(figsize=(15,10))
+    sns.barplot(data = df, x = df.cmc, y = df.usd)
+    plt.title('Converted Mana Cost by Price in USD')
+    plt.xlabel('CMC')
+    plt.ylabel('USD Price')
+    plt.show()
+
+def hypothesis_test_cmc(df, alpha = 0.05):
+    '''
+    One sample t-test.
     '''
     cost_to_test = df['cmc'].unique().tolist()
     outputs = []
@@ -136,6 +171,7 @@ def vis_usd_by_released_at(df):
     plt.xlabel('Release Date')
     plt.ylabel('USD price')
     plt.show()
+    
 # vis_usd_by_released_at(train)
 
     
@@ -151,6 +187,7 @@ def vis_usd_by_year(df):
     plt.xlabel('Year released')
     plt.ylabel('USD Price')
     plt.show()
+    
 # vis_usd_by_year(train)
 
 def hypothesis_test_years(df, alpha = 0.05):
@@ -169,6 +206,7 @@ def hypothesis_test_years(df, alpha = 0.05):
         }
         outputs.append(output)
     return pd.DataFrame(outputs)
+
 # hypothesis_test_years(train).sort_values('reject_null', ascending = False).head(5)
 
 
@@ -547,105 +585,207 @@ def q2_hypothesis_test(df):
     return
 
 
+def add_columns_with_usd_prices_for_styles(df):
+    '''
+    Adds columns to dataframe with the usd prices of the card style related fields.
+    '''
+    # Creates a column with USD prices for cards with frame effects
+    df.loc[df['frame_effects'] != 'no_frame_effects', 'frame_effects_usd'] = df['usd']
+    
+    # Creates a column with USD prices for cards that don't have black borders versions
+    df.loc[df['border_color'] != 'black', 'border_color_usd'] = df['usd']
+    
+    # Creates a column with USD prices cards without flavor text
+    df.loc[df['flavor_text'] != 'no_flavor_text', 'flavor_text_usd'] = df['usd']
+    
+    # Creates a column with USD prices non-modern style frame cards
+    df.loc[df['frame'] != '2015', 'frame_usd'] = df['usd']
+    
+    # Creates a column with USD prices for full art cards
+    df.loc[df['full_art'] == True, 'full_art_usd'] = df['usd']
+    
+    # Creates a column with USD prices for highres_image cards
+    df.loc[df['highres_image'] == True, 'highres_images_usd'] = df['usd']
+    
+    # Creates a column with USD prices for non-english card
+    df.loc[df['lang'] != 'en', 'lang_usd'] = df['usd']
+    
+    # Creates a column with USD prices for cards with non-normal layouts
+    df.loc[df['layout'] != 'normal', 'layout_usd'] = df['usd']
+    
+    # Creates a column with USD prices for promo cards
+    df.loc[df['promo_types'] != 'no_promo', 'promo_types_usd'] = df['usd']
+    
+    # Creates a column with USD prices for cards without a security stamp
+    df.loc[df['security_stamp'] != 'no_security_stamp', 'security_stamp_usd'] = df['usd']
+    
+    # Creates a column with USD prices for cards without a watermark
+    df.loc[df['watermark'] != 'no_waterwark', 'watermark_usd'] = df['usd']
+    return df
+
+def avg_stylized_and_normal_printings_and_diff(df):
+    '''
+    Returns the average price of cards in USD for reprints and first printings and the difference from reprints.
+    '''
+    avg_frame_effects = df.frame_effects_usd.mean()
+    avg_border_color = df.border_color_usd.mean()
+    avg_flavor_text = df.flavor_text_usd.mean()
+    avg_frame = df.frame_usd.mean()
+    avg_full_art = df.full_art_usd.mean()
+    avg_highres_images = df.highres_images_usd.mean()
+    avg_lang = df.lang_usd.mean()
+    avg_layout = df.layout_usd.mean()
+    avg_promo_types = df.promo_types_usd.mean()
+    avg_security_stamp = df.security_stamp_usd.mean()
+    avg_watermark = df.watermark_usd.mean()
+    stylized_usd = (frame_effects_usd + border_color_usd + flavor_text_usd + frame_usd + full_art_usd + highres_images_usd + lang_usd + layout_usd + promo_types_usd + security_stamp_usd + watermark_usd)
+    avg_stylized = df.stylized_usd.mean()
+    return f'The average USD price of stylized cards is ${round(avg_stylized, 2)}'
+    
+# , and normal cards is ${round(avg_first_prints, 2)}. The difference in average price is ${round((avg_stylized - avg_stylized),2)}.'
+
+
+def stylized_vs_normals_viz(df):
+    '''
+    Creates a bar plot for columns in the dataframe for reprints or first printings.
+    '''
+    plt.figure(figsize = (30,15))
+    sns.barplot(x = 'reprint', y = 'usd', data = df)
+    plt.title('Difference in Average Price of Reprints and First Printings')
+    plt.xlabel('Reprints or First Printings')
+    plt.ylabel('Price in $USD')
+    plt.xticks([0, 1],['First Printings', 'Reprints'])
+    return plt.show()
+
+    
+
+def stylized_or_not_viz(df):
+    '''
+    Combines explore functions for question one visualization
+    '''
+    df = add_columns_with_usd_prices_for_styles(df)
+    diff = avg_stylized_and_normal_printings_and_diff(df)
+    viz = stylized_vs_normals_viz(df)
+    return viz, diff
+
+def q3_hypothesis_test(df):
+    '''
+    Hypothesis testing for question two using Two-sample T-Test with a 95% confidence interval.
+    '''
+    # Sets alpha to 0.05 for 95% Confidence Interval
+    α = 0.05
+    
+    print(f'Variance for non-foil only cards is {round(df.reprints_usd.var(), 3)}.')
+    print(f'Variance for cards with both foil and non-foil cards is {round(df.first_prints_usd.var(), 3)}.')
+
+    # T-Test returning t and p values ignoring nan values
+    t, p = stats.ttest_ind(df.first_prints_usd, df.reprints_usd, equal_var = False, nan_policy = 'omit')
+    
+    # Prints statement for t-statistic and p-value
+    if (t < 0) & (p/2 < α):
+        print(f'The t-statistic is {round(t,3)} less than 0, and the p-value of {(p/2):.3e} is statistically significant.')
+    elif (t < 0) & (p/2 > α):
+        print(f'The t-statistic is {round(t,3)} less than 0, but the p-value of {(p/2):.3e} is not statistically significant.')
+    elif (t > 0) & (p/2 < α):
+        print(f'The t-statistic is {round(t,3)} more than 0, but the p-value of {(p/2):.3e} is statistically significant.')
+    else:
+        print(f'The t-statistic is {round(t,3)} more than 0, and the p-value of {(p/2):.3e} is not statistically significant.')
+     
+    # Prints statement for either accepting or rejecting the Null Hypothesis
+    if p/2 < α:
+        print("We reject the Null Hypothesis")
+    else:
+        print("We fail to reject the Null Hypothesis")
+    return
+
 
 ### David's final notebook explore data functions
-def vis_artist_by_usd(df):
+def vis_artist_by_usd(train):
     '''
-    Bar plor to show Artist and USD price, for top artist
+    Bar plor to show Artist and USD price, for top artist.
     '''
+    train2 = train.sort_values(by=['usd'], ascending=False,)[:100]
     plt.figure(figsize=(10,10))
-    sns.barplot(data=df, x='usd', y='artist')
-    plt.title('Artist vs USD price')
-    plt.xlabel('USD price')
-    plt.ylabel('Artist name')
-    plt.show()
-    
-    
-def hypothesis_artist_usd(df, alpha = 0.05):
-    '''
-    NEEDS DOC STRING!
-    '''
-    artist_count = df['artist'].unique().tolist()
-    outputs = []
-    for artist_name in artist_count:
-        usd_sample = df[(df['artist'] == artist_name) & (df.usd > 0.01)]['usd']
-        overall_mean = df['usd'].mean()
-        t, p = stats.ttest_1samp(usd_sample, overall_mean)
-        output = {
-            'artist':artist_name,
-            'price':usd_sample.max(),
-            't_stat':t,
-            'p_value':p,
-            'reject_null': t > 0 and p/2 < alpha
-        }
-        outputs.append(output)
-    return pd.DataFrame(outputs)
-
-
-def vis_rarity_by_usd(df):
-    '''
-    Median price for all cards based on Rarity and USD price
-    '''
-    plt.figure(figsize=(10,10))
-    sns.barplot(data=train, x='usd', y='rarity')
-    plt.title('Price values: Rarity vs USD price')
-    plt.xlabel('USD price')
-    plt.ylabel('Artist name')
-    plt.show()
-    
-
-def vis_artist_by_usd(df):
-    '''
-    Bar plot to show Artist, USD price and rarity of cards for top artist
-    '''
-    plt.figure(figsize=(10,10))
-    sns.barplot(data=df, x='usd', y='artist', hue='rarity')
+    sns.barplot(data=train2, x='usd', y='artist')
     plt.title('Rarity vs Artist/USD price')
     plt.xlabel('USD price')
     plt.ylabel('Artist name')
     plt.show()
 
-    
-def hypothesis_rarity_usd(df, alpha = 0.05):
-    '''
-    NEEDS DOC STRING!
-    '''
-    rarity_count = df['rarity'].unique().tolist()
-    outputs = []
-    for rarity_type in rarity_count:
-        usd_sample = df[(df['rarity'] == rarity_type) & (df.usd > 0.01)]['usd']
-        overall_mean = df['usd'].mean()
-        t, p = stats.ttest_1samp(usd_sample, overall_mean)
-        output = {
-            'rarity':rarity_type,
-            'price':usd_sample.max(),
-            't_stat':t,
-            'p_value':p,
-            'reject_null': t > 0 and p/2 < alpha
-        }
-        outputs.append(output)
-    return pd.DataFrame(outputs)
+# vis_artist_by_usd(train)
 
 
-def usd_rarity_set_type_total(df):
+def vis_rarity_by_usd(train):
     '''
-    Top 100 cards: Set_type and Rarity
+    Median price for all cards based on Rarity and USD price.
     '''
     plt.figure(figsize=(10,10))
-    sns.barplot(data=df, x='usd', y='set_type', hue='rarity', estimator=sum)
+    sns.barplot(data=train, x='usd', y='rarity')
+    plt.title('Median price: Rarity vs USD price')
+    plt.xlabel('USD price')
+    plt.ylabel('Artist name')
+    plt.show()
+
+# vis_rarity_by_usd(train)
+
+#--------------------------------------------------------------------------------#
+
+
+# Hypothesis 2
+# H0: artist and rarity of cards is = to price
+# HA: artist and rarity of cards is not = to price 
+
+def vis_artist_rarity_usd(df):
+    '''
+    Bar plot to show Artist, USD price and top 60 cards in the rarity category.
+    '''
+    train2 = df.sort_values(by=['usd'], ascending=False,)[:60]
+    plt.figure(figsize=(10,10))
+    sns.barplot(data=train2, x='usd', y='artist', hue='rarity')
+    plt.title('Rarity vs Artist/USD price')
+    plt.xlabel('USD price')
+    plt.ylabel('Artist name')
+    plt.show()
+
+# vis_artist_rarity_usd(train)
+#=================================================================================#
+
+# Hypothesis 3
+# H0: set_type and rarity of cards is = to price 
+# HA: set_type and rarity of cards is not = to price
+
+# sns.countplot(data= df, y='set_type')
+
+def viz_expensive_cards_by_set_type(df):
+    '''
+    Most expensive cards by set type.
+    '''
+    plt.figure(figsize=(10,10))
+    sns.countplot(data= df, y='set_type')
+    plt.title('Set Types')
+    plt.xlabel('Count')
+    plt.show()
+
+
+
+def usd_rarity_set_type_total(train):
+    '''
+    The top 100 cards by set type and Rarity.
+    '''
+    train2 = train.sort_values(by=['usd'], ascending=False,)[:100]
+    plt.figure(figsize=(10,10))
+    sns.barplot(data=train2, x='usd', y='set_type', hue='rarity', estimator=sum)
     plt.title('Price vs Set_type/Rarity')
     plt.xlabel('USD price')
     plt.ylabel('Set_type')
     plt.show()
-    
-    
-def vis_rarity_by_usd(df):
-    '''
-    Median price for all cards based on Rarity and USD price
-    '''
-    plt.figure(figsize=(10,10))
-    sns.barplot(data=df, x='usd', y='collector_number', hue='set_type')
-    plt.title('Median price: collector_number vs USD price')
-    plt.xlabel('USD price')
-    plt.ylabel('collector_number')
-    plt.show()
+
+# usd_rarity_set_type_total(train)
+
+# Key takeaway
+# Rare cards are the most expensive regardless of set_type
+# In the charts there are only a few none rare cards in the top 100 high value price range.
+
+#=====================================================================================# 
+
+
