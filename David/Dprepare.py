@@ -1,3 +1,21 @@
+#stephen fitzsimon 27 July 2022
+#prepare module for the Magic The Gathering Card prediction project
+import pandas as pd # to handle the dataframe
+import acquire as a
+import numpy as np
+import prepare as p
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+
+
+# Acquire and Prepare functions with train, validate and test
+df = a.get_data(query_url = False)
+print(df.shape)
+df = p.prepare_dataframe(df)
+train, validate, test = p.split_data(df)
+train.shape, validate.shape, test.shape
 
 # Hypothesis 1
 # H0:The amount of cards created is not = to the artist value.
@@ -31,7 +49,7 @@ vis_rarity_by_usd(train)
 
 # Hypothesis 2
 # H0: artist and rarity of cards is = to price
-# HA: artist and rarity of cards is not = to price */
+# HA: artist and rarity of cards is not = to price 
 
 # Bar plot to show Artist, USD price and top 60 cards in the rarity category
 def vis_artist_rarity_usd(train):
@@ -43,7 +61,7 @@ def vis_artist_rarity_usd(train):
     plt.ylabel('Artist name')
     plt.show()
 
-
+vis_artist_rarity_usd(train)
 #=================================================================================#
 
 # Hypothesis 3
@@ -84,6 +102,6 @@ def vis_collector_set_by_usd(train):
     plt.xlabel('USD price')
     plt.ylabel('collector_number')
     plt.show()
-
+ 
 vis_collector_set_by_usd(train)
 
