@@ -11,11 +11,11 @@ from scipy import stats
 # Import Regex
 import re
 
+
 ### Vasiliy's explore and hypothesis functions
 def get_legalites_chart(df):
     '''
-    To hammer out the visuals here I will have to go over the code that has gotten me the results: To do so would require starting with identifying where they meet
-I started from the top and got all of the peices assembled.
+    To hammer out the visuals here I will have to go over the code that has gotten me the results: To do so would require starting with identifying where they meet I started from the top and got all of the peices assembled.
     '''
     df['standard'] = df.legalities.apply(lambda r : r['standard'])
     df['future'] = df.legalities.apply(lambda r : r['future'])
@@ -80,10 +80,8 @@ I started from the top and got all of the peices assembled.
     answers = pd.DataFrame.from_dict(unrounded_answers)
 
     sns.barplot(data = answers, orient = "h")
-    
-# get_legalites_chart(train)
 
-## Q1 Hypothesis function goes here
+    
 def hypothesis_test_legalities(df, alpha = 0.05):
     '''
     One sample T-Test.
@@ -111,9 +109,7 @@ def top_7_sets(df):
     plt.ylabel('Set Name')
     plt.show()
 
-# top_7_sets(train)
 
-## Q2 Hypothesis function goes here
 def hypothesis_test_set_name(df, alpha = 0.05):
     '''
     One sample T-Test.
@@ -128,7 +124,7 @@ def hypothesis_test_set_name(df, alpha = 0.05):
     else:
         print("We reject the null hypothesis")
 
-## Q3 Visualization function goes here
+
 def cmc_by_price(df):
     '''
     NEEDS DOC STRING!
@@ -140,6 +136,7 @@ def cmc_by_price(df):
     plt.ylabel('USD Price')
     plt.show()
 
+    
 def hypothesis_test_cmc(df, alpha = 0.05):
     '''
     One sample t-test.
@@ -160,11 +157,13 @@ def hypothesis_test_cmc(df, alpha = 0.05):
         outputs.append(output)
     return pd.DataFrame(outputs)
 
-# hypothesis_test_years(train).sort_values('reject_null', ascending = False).head(5)
 
 
 ### Stephen's explore data functions
 def vis_usd_by_released_at(df):
+    '''
+    NEEDS DOC STRING!
+    '''
     plt.figure(figsize=(10,10))
     sns.lineplot(data=df[df['usd'] > 0], x='released_at', y='usd')
     plt.title('USD price and Released Date')
@@ -172,14 +171,18 @@ def vis_usd_by_released_at(df):
     plt.ylabel('USD price')
     plt.show()
     
-# vis_usd_by_released_at(train)
-
     
 def make_year_released_column(df):
+    '''
+    NEEDS DOC STRING!
+    '''
     df['year_released'] = df['released_at'].dt.year
     return df
 
 def vis_usd_by_year(df):
+    '''
+    NEEDS DOC STRING!
+    '''
     df = make_year_released_column(df)
     plt.figure(figsize=(10,10))
     sns.barplot(data=df[df['usd'] > 0], x='year_released', y='usd')
@@ -188,9 +191,11 @@ def vis_usd_by_year(df):
     plt.ylabel('USD Price')
     plt.show()
     
-# vis_usd_by_year(train)
 
 def hypothesis_test_years(df, alpha = 0.05):
+    '''
+    NEEDS DOC STRING!
+    '''
     years_to_test = df['year_released'].unique().tolist()
     outputs = []
     for year in years_to_test:
@@ -207,10 +212,11 @@ def hypothesis_test_years(df, alpha = 0.05):
         outputs.append(output)
     return pd.DataFrame(outputs)
 
-# hypothesis_test_years(train).sort_values('reject_null', ascending = False).head(5)
-
 
 def make_card_type_column(df):
+    '''
+    NEEDS DOC STRING!
+    '''
     card_cats = ['Card', 'Vanguard', 'Plane', 'Creature', 'Land', 'Enchantment', 'Artifact', 'Sorcery', 'Instant', 'Legendary', 'Token']
     df['card_type'] = 'other_type'
     for card_cat in card_cats:
@@ -219,6 +225,9 @@ def make_card_type_column(df):
     return df
 
 def vis_by_card_type(df):
+    '''
+    NEEDS DOC STRING!
+    '''
     df = make_card_type_column(df)
     plt.figure(figsize=(10,10))
     sns.barplot(data=df[df['usd'] > 0], y='card_type', x='usd')
@@ -232,6 +241,9 @@ def vis_by_card_type(df):
 
 
 def hypothesis_test_card_type(df, alpha = 0.05):
+    '''
+    NEEDS DOC STRING!
+    '''
     card_types_to_test = df['card_type'].unique().tolist()
     outputs = []
     for card_type in card_types_to_test:
@@ -249,10 +261,11 @@ def hypothesis_test_card_type(df, alpha = 0.05):
         outputs.append(output)
     return pd.DataFrame(outputs)
 
-# hypothesis_test_card_type(train).sort_values('reject_null', ascending = False)
-
 
 def make_games_boolean_columns(df):
+    '''
+    NEEDS DOC STRING!
+    '''
     df_new = df[['id', 'usd', 'name', 'games']].copy()
     games_values = []
     for r in df.games:
@@ -264,6 +277,9 @@ def make_games_boolean_columns(df):
     return df_new
 
 def vis_game_type(df):
+    '''
+    NEEDS DOC STRING!
+    '''
     games_df = make_games_boolean_columns(df)
     bool_columns = games_df.select_dtypes(include=bool).columns
     fig, axes = plt.subplots(3, 1, figsize = (10, 25), constrained_layout=True)
@@ -273,6 +289,9 @@ def vis_game_type(df):
     plt.show()
 
 def vis_game_type_by_combo(df):
+    '''
+    NEEDS DOC STRING!
+    '''
     df_new = df[['id', 'usd', 'name', 'games']].copy()
     df_new['games_str'] = df_new['games'].apply(lambda r : ' '.join(r))
     plt.figure(figsize=(10,10))
@@ -285,6 +304,9 @@ def vis_game_type_by_combo(df):
 
 
 def hypothesis_test_game_type(df, alpha = 0.05):
+    '''
+    NEEDS DOC STRING!
+    '''
     games_df = make_games_boolean_columns(df)
     bool_columns = games_df.select_dtypes(include=bool).columns
     outputs = []
@@ -307,6 +329,9 @@ def hypothesis_test_game_type(df, alpha = 0.05):
 
 
 def hypothesis_test_game_type_combinations(df, alpha = 0.05):
+    '''
+    NEEDS DOC STRING!
+    '''
     games_df = df[['id', 'usd', 'name', 'games']].copy()
     games_df['games_str'] = games_df['games'].apply(lambda r : ' '.join(r))
     test_values = games_df['games_str'].value_counts().index.tolist()
@@ -330,6 +355,9 @@ def hypothesis_test_game_type_combinations(df, alpha = 0.05):
 
 
 def viz_rarity_price(df):
+    '''
+    NEEDS DOC STRING!
+    '''
     plt.figure(figsize=(10,10))
     sns.barplot(data = df, x = 'rarity', y = 'usd', palette = sns.color_palette())
     plt.title('Card Rarity and USD Price')
@@ -341,6 +369,9 @@ def viz_rarity_price(df):
 
 
 def viz_card_type_rarity(df):
+    '''
+    NEEDS DOC STRING!
+    '''
     plt.figure(figsize=(10,10))
     sns.countplot(data = df, x = 'rarity', hue = 'card_type', palette = sns.color_palette())
     plt.title('Card Rarity and Basic Card Types')
@@ -351,6 +382,9 @@ def viz_card_type_rarity(df):
 
 
 def viz_rare_uncommon_card_type_prices(df):
+    '''
+    NEEDS DOC STRING!
+    '''
     plt.figure(figsize=(10,10))
     sns.barplot(data = df[df['rarity'].isin(['rare', 'uncommon', 'mythic'])], x = 'rarity', y= 'usd', hue = 'card_type', palette = sns.color_palette())
     plt.title('Card Rarity and Basic Card Types by USD Price')
@@ -362,6 +396,9 @@ def viz_rare_uncommon_card_type_prices(df):
 
 
 def rarity_card_type_hypothesis_tests(df, alpha = 0.05):
+    '''
+    NEEDS DOC STRING!
+    '''
     outputs = []
     rarities_to_test = ['rare', 'uncommon', 'mythic']
     overall_mean = df['usd'].mean()
@@ -387,6 +424,9 @@ def rarity_card_type_hypothesis_tests(df, alpha = 0.05):
 
 
 def viz_lang_column_usd(df):
+    '''
+    NEEDS DOC STRING!
+    '''
     plt.figure(figsize=(10,10))
     sns.barplot(data = df, x = 'lang', y = 'usd')
     plt.title('Card USD Price by Language')
@@ -398,6 +438,9 @@ def viz_lang_column_usd(df):
 
 
 def lang_hypothesis_test(df, alpha = 0.05):
+    '''
+    NEEDS DOC STRING!
+    '''
     outputs = []
     lang_types = df['lang'].unique().tolist()
     overall_mean = df['usd'].mean()
@@ -479,7 +522,7 @@ def nonfoil_only_or_not_viz(df):
     return viz, diff
 
 
-def q1_hypothesis_test(df):
+def hypothesis_test_foil_vs_nonfoil(df):
     '''
     Hypothesis testing for question one using Two-sample T-Test with a 95% confidence interval.
     '''
@@ -494,13 +537,13 @@ def q1_hypothesis_test(df):
     
     # Prints statement for t-statistic and p-value
     if (t < 0) & (p/2 < α):
-        print(f'The t-statistic is {round(t,3)} less than 0, and the p-value of {(p/2):.3e} is statistically significant.')
+        print(f'The t-statistic of {round(t,3)} is less than 0, and the p-value of {(p/2):.3e} is statistically significant.')
     elif (t < 0) & (p/2 > α):
-        print(f'The t-statistic is {round(t,3)} less than 0, but the p-value of {(p/2):.3e} is not statistically significant.')
+        print(f'The t-statistic of {round(t,3)} is less than 0, but the p-value of {(p/2):.3e} is not statistically significant.')
     elif (t > 0) & (p/2 < α):
-        print(f'The t-statistic is {round(t,3)} more than 0, but the p-value of {(p/2):.3e} is statistically significant.')
+        print(f'The t-statistic of {round(t,3)} is more than 0, but the p-value of {(p/2):.3e} is statistically significant.')
     else:
-        print(f'The t-statistic is {round(t,3)} more than 0, and the p-value of {(p/2):.3e} is not statistically significant.')
+        print(f'The t-statistic of {round(t,3)} is more than 0, and the p-value of {(p/2):.3e} is not statistically significant.')
      
     # Prints statement for either accepting or rejecting the Null Hypothesis
     if p/2 < α:
@@ -546,7 +589,7 @@ def avg_reprints_and_first_printings_and_diff(df):
 
 def reprint_or_not_viz(df):
     '''
-    Combines explore functions for question one visualization
+    Combines explore functions for reprint visualization
     '''
     df = add_columns_with_usd_prices_for_reprints_and_first_printings(df)
     diff = avg_reprints_and_first_printings_and_diff(df)
@@ -554,7 +597,7 @@ def reprint_or_not_viz(df):
     return viz, diff
 
 
-def q2_hypothesis_test(df):
+def hypothesis_test_reprint_or_not(df):
     '''
     Hypothesis testing for question two using Two-sample T-Test with a 95% confidence interval.
     '''
@@ -569,13 +612,13 @@ def q2_hypothesis_test(df):
     
     # Prints statement for t-statistic and p-value
     if (t < 0) & (p/2 < α):
-        print(f'The t-statistic is {round(t,3)} less than 0, and the p-value of {(p/2):.3e} is statistically significant.')
+        print(f'The t-statistic of {round(t,3)} is less than 0, and the p-value of {(p/2):.3e} is statistically significant.')
     elif (t < 0) & (p/2 > α):
-        print(f'The t-statistic is {round(t,3)} less than 0, but the p-value of {(p/2):.3e} is not statistically significant.')
+        print(f'The t-statistic of {round(t,3)} is less than 0, but the p-value of {(p/2):.3e} is not statistically significant.')
     elif (t > 0) & (p/2 < α):
-        print(f'The t-statistic is {round(t,3)} more than 0, but the p-value of {(p/2):.3e} is statistically significant.')
+        print(f'The t-statistic of {round(t,3)} is more than 0, but the p-value of {(p/2):.3e} is statistically significant.')
     else:
-        print(f'The t-statistic is {round(t,3)} more than 0, and the p-value of {(p/2):.3e} is not statistically significant.')
+        print(f'The t-statistic of {round(t,3)} is more than 0, and the p-value of {(p/2):.3e} is not statistically significant.')
      
     # Prints statement for either accepting or rejecting the Null Hypothesis
     if p/2 < α:
