@@ -3,11 +3,13 @@
 # note: this is mainly to clean up the top of the 
 # model.py file
 
+#models used
 from sklearn.neighbors import RadiusNeighborsRegressor, KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.linear_model import LinearRegression, LassoLars
 from sklearn.svm import LinearSVR
 from sklearn.ensemble import RandomForestRegressor
+from xgboost import XGBRegressor
 # ensures that the models are always the same as in the notebook
 RAND_SEED = 1729 
 
@@ -22,14 +24,6 @@ MODELS = [
     {
         'name':'LinearSVR',
         'model':LinearSVR()
-    },
-    {
-        'name':'LinearRegression',
-        'model':LinearRegression()
-    },
-    {
-        'name':'LassoLars',
-        'model':LassoLars()
     },
     {
         'name':'RadiusNeighborsRegressor',
@@ -50,6 +44,14 @@ MODELS = [
     {
         'name':'RandomForestRegressor',
         'model':RandomForestRegressor(random_state = RAND_SEED)
+    },
+    {
+        'name':'XGBoostRegressor',
+        'model':XGBRegressor(n_estimators = 500, max_depth = 2)
+    },
+    {
+        'name':'LinearRegression',
+        'model':LinearRegression()
     }
 ]
 
@@ -72,17 +74,32 @@ DROP_COLUMNS = [
     'toughness',
     'collector_number'
 ]
+# contains the columns that will be scaled
+SCALED_COLUMNS = [
+    'cmc', 
+    'life_modifier', 
+    'hand_modifier',
+    'edhrec_rank', 
+    'penny_rank'
+]
+#for now, drop them
+DROP_COLUMNS += SCALED_COLUMNS
+#testing to drop more columns:
+DROP_COLUMNS += [   
+    'layout',
+    'image_status',
+    'flavor_name',
+    'printed_name',
+    'set_name',
+    'color_identity'
+]
 
 # columns that will be encoded
 ENCODED_COLUMNS = [
     'lang',
-    # 'layout',
-    # 'image_status',
     'colors',
-    # 'color_identity',
     'games',
     'finishes',
-    # 'set_name',
     'set_type',
     'rarity',
     'border_color',
@@ -93,9 +110,7 @@ ENCODED_COLUMNS = [
     'watermark',
     'frame_effects',
     'loyalty',
-    # 'printed_name',
     'color_indicator',
-    # 'flavor_name',
     'standard_legality',
     'future_legality',
     'historic_legality',
@@ -118,23 +133,3 @@ ENCODED_COLUMNS = [
     'card_type'
 ]
 
-# contains the columns that will be scaled
-SCALED_COLUMNS = [
-    'cmc', 
-    'life_modifier', 
-    'hand_modifier',
-    'edhrec_rank', 
-    'penny_rank'
-]
-#for now, drop them
-DROP_COLUMNS += SCALED_COLUMNS
-
-#testing to drop more columns:
-DROP_COLUMNS += [   
-    'layout',
-    'image_status',
-    'flavor_name',
-    'printed_name',
-    'set_name',
-    'color_identity'
-]
