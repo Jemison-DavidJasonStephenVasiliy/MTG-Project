@@ -11,6 +11,7 @@ from scipy import stats
 # Import Regex
 import re
 
+#=============================================================================#
 
 ### Vasiliy's explore and hypothesis functions
 def get_legalites_chart(df):
@@ -81,7 +82,8 @@ def get_legalites_chart(df):
 
     sns.barplot(data = answers, orient = "h")
 
-    
+#-----------------------------------------------------------------------------#
+
 def hypothesis_test_legalities(df, alpha = 0.05):
     '''
     One sample T-Test.
@@ -96,7 +98,8 @@ def hypothesis_test_legalities(df, alpha = 0.05):
     else:
         print("We reject the null hypothesis")
     
-    
+#-----------------------------------------------------------------------------#
+
 def top_7_sets(df):
     '''
     NEEDS DOC STRING!
@@ -109,6 +112,7 @@ def top_7_sets(df):
     plt.ylabel('Set Name')
     plt.show()
 
+#-----------------------------------------------------------------------------#
 
 def hypothesis_test_set_name(df, alpha = 0.05):
     '''
@@ -124,6 +128,7 @@ def hypothesis_test_set_name(df, alpha = 0.05):
     else:
         print("We reject the null hypothesis")
 
+#-----------------------------------------------------------------------------#
 
 def cmc_by_price(df):
     '''
@@ -136,7 +141,8 @@ def cmc_by_price(df):
     plt.ylabel('USD Price')
     plt.show()
 
-    
+#-----------------------------------------------------------------------------#
+
 def hypothesis_test_cmc(df, alpha = 0.05):
     '''
     One sample t-test.
@@ -157,7 +163,7 @@ def hypothesis_test_cmc(df, alpha = 0.05):
         outputs.append(output)
     return pd.DataFrame(outputs)
 
-
+#=============================================================================#
 
 ### Stephen's explore data functions
 def vis_usd_by_released_at(df):
@@ -171,13 +177,16 @@ def vis_usd_by_released_at(df):
     plt.ylabel('USD price')
     plt.show()
     
-    
+#-----------------------------------------------------------------------------#
+
 def make_year_released_column(df):
     '''
     NEEDS DOC STRING!
     '''
     df['year_released'] = df['released_at'].dt.year
     return df
+
+#-----------------------------------------------------------------------------#
 
 def vis_usd_by_year(df):
     '''
@@ -191,6 +200,7 @@ def vis_usd_by_year(df):
     plt.ylabel('USD Price')
     plt.show()
     
+#-----------------------------------------------------------------------------#
 
 def hypothesis_test_years(df, alpha = 0.05):
     '''
@@ -212,6 +222,7 @@ def hypothesis_test_years(df, alpha = 0.05):
         outputs.append(output)
     return pd.DataFrame(outputs)
 
+#-----------------------------------------------------------------------------#
 
 def make_card_type_column(df):
     '''
@@ -236,9 +247,7 @@ def vis_by_card_type(df):
     plt.ylabel('Basic Card Type')
     plt.show()
     
-# vis_by_card_type(train)
-# make_card_type_column(train).groupby('card_type').usd.describe()
-
+#-----------------------------------------------------------------------------#
 
 def hypothesis_test_card_type(df, alpha = 0.05):
     '''
@@ -261,6 +270,7 @@ def hypothesis_test_card_type(df, alpha = 0.05):
         outputs.append(output)
     return pd.DataFrame(outputs)
 
+#-----------------------------------------------------------------------------#
 
 def make_games_boolean_columns(df):
     '''
@@ -288,6 +298,8 @@ def vis_game_type(df):
     fig.suptitle('Card USD Price by Game type')
     plt.show()
 
+#-----------------------------------------------------------------------------#
+
 def vis_game_type_by_combo(df):
     '''
     NEEDS DOC STRING!
@@ -298,10 +310,8 @@ def vis_game_type_by_combo(df):
     sns.barplot(data = df_new, y='games_str', x='usd')
     plt.title('USD Price by Games Combination')
     plt.show()
-    
-# vis_game_type(train)
-# vis_game_type_by_combo(train)
 
+#-----------------------------------------------------------------------------#
 
 def hypothesis_test_game_type(df, alpha = 0.05):
     '''
@@ -327,6 +337,7 @@ def hypothesis_test_game_type(df, alpha = 0.05):
 
 # hypothesis_test_game_type(train).sort_values('reject_null', ascending=False)
 
+#-----------------------------------------------------------------------------#
 
 def hypothesis_test_game_type_combinations(df, alpha = 0.05):
     '''
@@ -353,6 +364,7 @@ def hypothesis_test_game_type_combinations(df, alpha = 0.05):
     
 # hypothesis_test_game_type_combinations(train).sort_values('reject_null', ascending=False)
 
+#-----------------------------------------------------------------------------#
 
 def viz_rarity_price(df):
     '''
@@ -365,8 +377,7 @@ def viz_rarity_price(df):
     plt.ylabel('USD Price')
     plt.show()
     
-# viz_rarity_price(train)
-
+#-----------------------------------------------------------------------------#
 
 def viz_card_type_rarity(df):
     '''
@@ -378,8 +389,7 @@ def viz_card_type_rarity(df):
     plt.xlabel('Rarity Type')
     plt.show()
 
-# viz_card_type_rarity(train)
-
+#-----------------------------------------------------------------------------#
 
 def viz_rare_uncommon_card_type_prices(df):
     '''
@@ -392,8 +402,7 @@ def viz_rare_uncommon_card_type_prices(df):
     plt.ylabel('USD Price')
     plt.show()
     
-# viz_rare_uncommon_card_type_prices(train)
-
+#-----------------------------------------------------------------------------#
 
 def rarity_card_type_hypothesis_tests(df, alpha = 0.05):
     '''
@@ -422,6 +431,7 @@ def rarity_card_type_hypothesis_tests(df, alpha = 0.05):
 
 # rarity_card_type_hypothesis_tests(train).sort_values('reject_null', ascending=False).head(15)
 
+#-----------------------------------------------------------------------------#
 
 def viz_lang_column_usd(df):
     '''
@@ -434,8 +444,7 @@ def viz_lang_column_usd(df):
     plt.ylabel('USD Price')
     plt.show()
     
-# viz_lang_column_usd(train)
-
+#-----------------------------------------------------------------------------#
 
 def lang_hypothesis_test(df, alpha = 0.05):
     '''
@@ -460,7 +469,7 @@ def lang_hypothesis_test(df, alpha = 0.05):
 
 # lang_hypothesis_test(train).sort_values('reject_null', ascending=False)
 
-
+#=============================================================================#
 
 ### Jason's final notebook explore functions
 def add_nonfoil_only_and_both_foil_and_nonfoil_columns(df):
@@ -475,6 +484,7 @@ def add_nonfoil_only_and_both_foil_and_nonfoil_columns(df):
     df['foil_and_nonfoil'] = df.loc[:, 'nonfoil'] == df.loc[:, 'foil']
     return df
 
+#-----------------------------------------------------------------------------#
 
 def add_columns_with_usd_prices_for_nonfoil_cards(df):
     '''
@@ -488,6 +498,7 @@ def add_columns_with_usd_prices_for_nonfoil_cards(df):
     df.loc[df['foil_and_nonfoil'] == True, 'foil_and_nonfoil_usd'] = df['usd']
     return df
 
+#-----------------------------------------------------------------------------#
 
 def avg_nonfoil_only_and_both_foil_and_nonfoil_and_diff(df):
     '''
@@ -497,6 +508,7 @@ def avg_nonfoil_only_and_both_foil_and_nonfoil_and_diff(df):
     avg_foil_and_nonfoil = df.foil_and_nonfoil_usd.mean()
     return f'The average USD price of non-foil only cards is ${round(avg_nonfoil_only, 2)},  and for cards with both foil and non-foil is ${round(avg_foil_and_nonfoil, 2)}. The difference in average price is ${round((avg_nonfoil_only - avg_foil_and_nonfoil),2)}.'
 
+#-----------------------------------------------------------------------------#
 
 def only_foil_vs_both_versions_viz(df):
     '''
@@ -510,6 +522,7 @@ def only_foil_vs_both_versions_viz(df):
     plt.xticks([0, 1],['Both Foils and Non-Foils', 'Only Non-Foils'])
     return plt.show()
 
+#-----------------------------------------------------------------------------#
 
 def nonfoil_only_or_not_viz(df):
     '''
@@ -521,10 +534,11 @@ def nonfoil_only_or_not_viz(df):
     viz = only_foil_vs_both_versions_viz(df)
     return viz, diff
 
+#-----------------------------------------------------------------------------#
 
 def hypothesis_test_foil_vs_nonfoil(df):
     '''
-    Hypothesis testing for question one using Two-sample T-Test with a 95% confidence interval.
+    Hypothesis testing for using Two-sample T-Test with a 95% confidence interval.
     '''
     # Sets alpha to 0.05 for 95% Confidence Interval
     α = 0.05
@@ -552,7 +566,8 @@ def hypothesis_test_foil_vs_nonfoil(df):
         print("We fail to reject the Null Hypothesis")
     return
           
-    
+#-----------------------------------------------------------------------------#
+
 def add_columns_with_usd_prices_for_reprints_and_first_printings(df):
     '''
     Adds two columns to the dataframe with the usd prices of all first printings and reprints of cards.
@@ -564,6 +579,7 @@ def add_columns_with_usd_prices_for_reprints_and_first_printings(df):
     df.loc[df['reprint'] == False, 'first_prints_usd'] = df['usd']
     return df
 
+#-----------------------------------------------------------------------------#
 
 def reprints_vs_first_prints_viz(df):
     '''
@@ -577,6 +593,7 @@ def reprints_vs_first_prints_viz(df):
     plt.xticks([0, 1],['First Printings', 'Reprints'])
     return plt.show()
 
+#-----------------------------------------------------------------------------#
 
 def avg_reprints_and_first_printings_and_diff(df):
     '''
@@ -586,6 +603,7 @@ def avg_reprints_and_first_printings_and_diff(df):
     avg_first_prints = df.first_prints_usd.mean()
     return f'The average USD price of reprinted cards is ${round(avg_reprints, 2)},  and first print cards is ${round(avg_first_prints, 2)}. The difference in average price is ${round((avg_reprints - avg_first_prints),2)}.'
 
+#-----------------------------------------------------------------------------#
 
 def reprint_or_not_viz(df):
     '''
@@ -596,10 +614,11 @@ def reprint_or_not_viz(df):
     viz = reprints_vs_first_prints_viz(df)
     return viz, diff
 
+#-----------------------------------------------------------------------------#
 
 def hypothesis_test_reprint_or_not(df):
     '''
-    Hypothesis testing for question two using Two-sample T-Test with a 95% confidence interval.
+    Hypothesis testing using Two-sample T-Test with a 95% confidence interval.
     '''
     # Sets alpha to 0.05 for 95% Confidence Interval
     α = 0.05
@@ -627,6 +646,7 @@ def hypothesis_test_reprint_or_not(df):
         print("We fail to reject the Null Hypothesis")
     return
 
+#-----------------------------------------------------------------------------#
 
 def add_columns_with_usd_prices_for_styles(df):
     '''
@@ -666,6 +686,8 @@ def add_columns_with_usd_prices_for_styles(df):
     df.loc[df['watermark'] != 'no_waterwark', 'watermark_usd'] = df['usd']
     return df
 
+#-----------------------------------------------------------------------------#
+
 def avg_stylized_and_normal_printings_and_diff(df):
     '''
     Returns the average price of cards in USD for reprints and first printings and the difference from reprints.
@@ -687,6 +709,7 @@ def avg_stylized_and_normal_printings_and_diff(df):
     
 # , and normal cards is ${round(avg_first_prints, 2)}. The difference in average price is ${round((avg_stylized - avg_stylized),2)}.'
 
+#-----------------------------------------------------------------------------#
 
 def stylized_vs_normals_viz(df):
     '''
@@ -700,7 +723,7 @@ def stylized_vs_normals_viz(df):
     plt.xticks([0, 1],['First Printings', 'Reprints'])
     return plt.show()
 
-    
+#-----------------------------------------------------------------------------#    
 
 def stylized_or_not_viz(df):
     '''
@@ -711,9 +734,11 @@ def stylized_or_not_viz(df):
     viz = stylized_vs_normals_viz(df)
     return viz, diff
 
-def q3_hypothesis_test(df):
+#-----------------------------------------------------------------------------#
+
+def hypothesis_test_stylized_or_not(df):
     '''
-    Hypothesis testing for question two using Two-sample T-Test with a 95% confidence interval.
+    Hypothesis testing using Two-sample T-Test with a 95% confidence interval.
     '''
     # Sets alpha to 0.05 for 95% Confidence Interval
     α = 0.05
@@ -741,11 +766,12 @@ def q3_hypothesis_test(df):
         print("We fail to reject the Null Hypothesis")
     return
 
+#=============================================================================#
 
 ### David's final notebook explore data functions
 def vis_artist_by_usd(train):
     '''
-    Bar plor to show Artist and USD price, for top artist.
+    Bar plot to show Artist and USD price, for top artist.
     '''
     train2 = train.sort_values(by=['usd'], ascending=False,)[:100]
     plt.figure(figsize=(10,10))
@@ -755,9 +781,8 @@ def vis_artist_by_usd(train):
     plt.ylabel('Artist name')
     plt.show()
 
-# vis_artist_by_usd(train)
-
-
+#-----------------------------------------------------------------------------#
+    
 def vis_rarity_by_usd(train):
     '''
     Median price for all cards based on Rarity and USD price.
@@ -769,14 +794,7 @@ def vis_rarity_by_usd(train):
     plt.ylabel('Artist name')
     plt.show()
 
-# vis_rarity_by_usd(train)
-
-#--------------------------------------------------------------------------------#
-
-
-# Hypothesis 2
-# H0: artist and rarity of cards is = to price
-# HA: artist and rarity of cards is not = to price 
+#-----------------------------------------------------------------------------#
 
 def vis_artist_rarity_usd(df):
     '''
@@ -790,14 +808,7 @@ def vis_artist_rarity_usd(df):
     plt.ylabel('Artist name')
     plt.show()
 
-# vis_artist_rarity_usd(train)
-#=================================================================================#
-
-# Hypothesis 3
-# H0: set_type and rarity of cards is = to price 
-# HA: set_type and rarity of cards is not = to price
-
-# sns.countplot(data= df, y='set_type')
+#-----------------------------------------------------------------------------#
 
 def viz_expensive_cards_by_set_type(df):
     '''
@@ -809,7 +820,7 @@ def viz_expensive_cards_by_set_type(df):
     plt.xlabel('Count')
     plt.show()
 
-
+#-----------------------------------------------------------------------------#
 
 def usd_rarity_set_type_total(train):
     '''
@@ -823,12 +834,6 @@ def usd_rarity_set_type_total(train):
     plt.ylabel('Set_type')
     plt.show()
 
-# usd_rarity_set_type_total(train)
-
-# Key takeaway
-# Rare cards are the most expensive regardless of set_type
-# In the charts there are only a few none rare cards in the top 100 high value price range.
-
-#=====================================================================================# 
+#=============================================================================#
 
 
