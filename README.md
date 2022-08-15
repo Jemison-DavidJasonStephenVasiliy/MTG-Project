@@ -155,12 +155,9 @@ Functions to prepare the dataframe are stored in two seperate files depending on
 **prepare.py:** Functions for cleaning and ordering data
 * nulls are dropped
 * change dtypes to correct type
-* 
+* extracted USD from 'prices' column into its own column
+* split dataframe into test, validate, and train
 
-**preprocessing.py:** Functions for adding features we found interesting / modyifying data for ease of use in exploration
-* 
-* 
-* 
 
 
 ### Explore
@@ -185,9 +182,10 @@ We used these sets of feauture groups.
 - 
 
 **Models Evaluated**
-* OLS Linear Regression
-* 
-* 
+* RandomForestRegressor
+* KNeighborsRegressor
+* DecisionTreeRegressor
+* LinearSVR
 
 
 **Evaluation Metric**  
@@ -196,16 +194,15 @@ We used these sets of feauture groups.
 ![Model-Error](https://github.com/Jemison-DavidJasonStephenVasiliy/MTG-Project/(tbd)
 
 **Final Model:**  
-(Model types) was our final model we performed on test, predicting ##% better than the baseline.  
+RandomForestRegressor was our final model we performed on test, predicting ##% better than the baseline.  
 
-| Model                         | Train  | Validate  | Test  |
+| Model                         | Train      | Validate      | Test      |
 |-------------------------------|------------|---------------|-----------|
-| OLS Linear Regression         |  |       |    |
-|          |   |        |           |
-|      |   |        |           |
-|  |   |               |           |
-|             |   |               |           |
-|                   |  |               |           |  
+| RandomForestRegressor         |            |               |           |
+| KNeighborsRegressor           |            |               |           |
+| DecisionTreeRegressor         |            |               |           |
+| LinearSVR                     |            |               |           |
+ 
 
 **How It Works:**  
 (text)  
@@ -213,17 +210,18 @@ We used these sets of feauture groups.
 ![Model_Evaluation](https://github.com/Jemison-DavidJasonStephenVasiliy/MTG-Project/(tbd)
 
 ### Conclusions  
-(text)
+Using Scryfall data we are predicting the USD price of Magic The Gathering cards. This allows the publisher to determine the price of newly published cards by their similarity to other cards to make sure that they are hitting all the likely price points within the current market. It will also allow buyers and sellers to determine the price of cards with no or little current price data.
 
 <kbd>[Back to Table of Contents](https://github.com/Jemison-DavidJasonStephenVasiliy/MTG-Project/#table-of-contents)</kbd>
 ## How to Reproduce  
 ### Steps  
 1. ~Read through the README.md file~ :white_check_mark:  
 2. Download the acquire.py, prepare.py, explore.py, and modeling.py modules.
-3. Visit https://scryfall.com/docs/api/bulk-data for the most up-to-date dataset  
-4. Use the acquire function to import your dataset
-5. Use the prepare function to clean up your dataframe.
-6. Explore the data for as you like.
+3. Visit https://scryfall.com/docs/api/bulk-data for the most up-to-date dataset.
+4. Use the acquire function to import your dataset.
+5. Pip install XGboost.
+6. Use the prepare function to clean up your dataframe.
+7. Explore the data as you like.
 
 ### Tools & Requirements
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)

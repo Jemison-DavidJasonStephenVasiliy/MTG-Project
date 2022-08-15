@@ -229,7 +229,7 @@ def select_k_best(X_train, y_train, k_select):
 
 def get_k_best_columns(X_train, y_train, k_select_min = 100, k_select_max = 300):
     """
-    Get sets of the k best columns
+    Get sets of the k best columns.
     """
     column_sets_for_modeling = []
     for i in range(k_select_min, k_select_max+50, 50):
@@ -241,7 +241,7 @@ def get_k_best_columns(X_train, y_train, k_select_min = 100, k_select_max = 300)
     
 def model_loop(train, validate):
     """
-    Testsa a series of algorithms and evaluates them
+    Tests a series of algorithms and evaluates them.
     """
     outputs = []
     #make baseline model
@@ -432,7 +432,7 @@ def make_baseline_model(train, validate, return_df = False):
     output_mean = evaluate_train_validate_model(baseline_model_mean, baseline_model_val_mean, 'baseline_mean')
     output_median = evaluate_train_validate_model(baseline_model_median, baseline_model_val_median, 'baseline_median')
     if return_df:
-        return pd.DataFrame([output_mean, output_median])
+        return pd.DataFrame([output_mean, output_median]).set_index('model')
     else:
         return output_mean, output_median
 

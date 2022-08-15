@@ -161,7 +161,7 @@ def hypothesis_test_cmc(df, alpha = 0.05):
             'reject_null': t > 0 and p/2 < alpha
         }
         outputs.append(output)
-    return pd.DataFrame(outputs)
+    return pd.DataFrame(outputs).sort_values('reject_null', ascending = False).head(5)
 
 #=============================================================================#
 
@@ -220,7 +220,7 @@ def hypothesis_test_years(df, alpha = 0.05):
             'reject_null': t > 0 and p/2 < alpha
         }
         outputs.append(output)
-    return pd.DataFrame(outputs)
+    return pd.DataFrame(outputs).sort_values('reject_null', ascending = False).head(5)
 
 #-----------------------------------------------------------------------------#
 
@@ -268,7 +268,7 @@ def hypothesis_test_card_type(df, alpha = 0.05):
             'reject_null': t > 0 and p/2 < alpha
         }
         outputs.append(output)
-    return pd.DataFrame(outputs)
+    return pd.DataFrame(outputs).sort_values('reject_null', ascending = False)
 
 #-----------------------------------------------------------------------------#
 
@@ -333,9 +333,7 @@ def hypothesis_test_game_type(df, alpha = 0.05):
             'reject_null': t > 0 and p/2 < alpha
         }
         outputs.append(output)
-    return pd.DataFrame(outputs)
-
-# hypothesis_test_game_type(train).sort_values('reject_null', ascending=False)
+    return pd.DataFrame(outputs).sort_values('reject_null', ascending=False)
 
 #-----------------------------------------------------------------------------#
 
@@ -360,10 +358,8 @@ def hypothesis_test_game_type_combinations(df, alpha = 0.05):
             'reject_null': t > 0 and p/2 < alpha
         }
         outputs.append(output)
-    return pd.DataFrame(outputs)
+    return pd.DataFrame(outputs).sort_values('reject_null', ascending=False)
     
-# hypothesis_test_game_type_combinations(train).sort_values('reject_null', ascending=False)
-
 #-----------------------------------------------------------------------------#
 
 def viz_rarity_price(df):
@@ -427,47 +423,7 @@ def rarity_card_type_hypothesis_tests(df, alpha = 0.05):
                 'reject_null': t > 0 and p/2 < alpha
             }
             outputs.append(output)
-    return pd.DataFrame(outputs)
-
-# rarity_card_type_hypothesis_tests(train).sort_values('reject_null', ascending=False).head(15)
-
-#-----------------------------------------------------------------------------#
-
-def viz_lang_column_usd(df):
-    '''
-    NEEDS DOC STRING!
-    '''
-    plt.figure(figsize=(10,10))
-    sns.barplot(data = df, x = 'lang', y = 'usd')
-    plt.title('Card USD Price by Language')
-    plt.xlabel('Language Type')
-    plt.ylabel('USD Price')
-    plt.show()
-    
-#-----------------------------------------------------------------------------#
-
-def lang_hypothesis_test(df, alpha = 0.05):
-    '''
-    NEEDS DOC STRING!
-    '''
-    outputs = []
-    lang_types = df['lang'].unique().tolist()
-    overall_mean = df['usd'].mean()
-    for lang_type in lang_types:
-        in_sample = df[df['lang'] == lang_type]['usd']
-        t, p = stats.ttest_1samp(in_sample, overall_mean)
-        output = {
-            'langauge':lang_type,
-            'overall_mean':overall_mean,
-            'legality_mean':in_sample.mean(),
-            't_value':t,
-            'p_value':p,
-            'reject_null': t > 0 and p/2 < alpha
-        } 
-        outputs.append(output)
-    return pd.DataFrame(outputs)
-
-# lang_hypothesis_test(train).sort_values('reject_null', ascending=False)
+    return pd.DataFrame(outputs).sort_values('reject_null', ascending=False).head(15)
 
 #=============================================================================#
 
@@ -638,126 +594,6 @@ def hypothesis_test_reprint_or_not(df):
         print(f'The t-statistic of {round(t,3)} is more than 0, but the p-value of {(p/2):.3e} is statistically significant.')
     else:
         print(f'The t-statistic of {round(t,3)} is more than 0, and the p-value of {(p/2):.3e} is not statistically significant.')
-     
-    # Prints statement for either accepting or rejecting the Null Hypothesis
-    if p/2 < α:
-        print("We reject the Null Hypothesis")
-    else:
-        print("We fail to reject the Null Hypothesis")
-    return
-
-#-----------------------------------------------------------------------------#
-
-def add_columns_with_usd_prices_for_styles(df):
-    '''
-    Adds columns to dataframe with the usd prices of the card style related fields.
-    '''
-    # Creates a column with USD prices for cards with frame effects
-    df.loc[df['frame_effects'] != 'no_frame_effects', 'frame_effects_usd'] = df['usd']
-    
-    # Creates a column with USD prices for cards that don't have black borders versions
-    df.loc[df['border_color'] != 'black', 'border_color_usd'] = df['usd']
-    
-    # Creates a column with USD prices cards without flavor text
-    df.loc[df['flavor_text'] != 'no_flavor_text', 'flavor_text_usd'] = df['usd']
-    
-    # Creates a column with USD prices non-modern style frame cards
-    df.loc[df['frame'] != '2015', 'frame_usd'] = df['usd']
-    
-    # Creates a column with USD prices for full art cards
-    df.loc[df['full_art'] == True, 'full_art_usd'] = df['usd']
-    
-    # Creates a column with USD prices for highres_image cards
-    df.loc[df['highres_image'] == True, 'highres_images_usd'] = df['usd']
-    
-    # Creates a column with USD prices for non-english card
-    df.loc[df['lang'] != 'en', 'lang_usd'] = df['usd']
-    
-    # Creates a column with USD prices for cards with non-normal layouts
-    df.loc[df['layout'] != 'normal', 'layout_usd'] = df['usd']
-    
-    # Creates a column with USD prices for promo cards
-    df.loc[df['promo_types'] != 'no_promo', 'promo_types_usd'] = df['usd']
-    
-    # Creates a column with USD prices for cards without a security stamp
-    df.loc[df['security_stamp'] != 'no_security_stamp', 'security_stamp_usd'] = df['usd']
-    
-    # Creates a column with USD prices for cards without a watermark
-    df.loc[df['watermark'] != 'no_waterwark', 'watermark_usd'] = df['usd']
-    return df
-
-#-----------------------------------------------------------------------------#
-
-def avg_stylized_and_normal_printings_and_diff(df):
-    '''
-    Returns the average price of cards in USD for reprints and first printings and the difference from reprints.
-    '''
-    avg_frame_effects = df.frame_effects_usd.mean()
-    avg_border_color = df.border_color_usd.mean()
-    avg_flavor_text = df.flavor_text_usd.mean()
-    avg_frame = df.frame_usd.mean()
-    avg_full_art = df.full_art_usd.mean()
-    avg_highres_images = df.highres_images_usd.mean()
-    avg_lang = df.lang_usd.mean()
-    avg_layout = df.layout_usd.mean()
-    avg_promo_types = df.promo_types_usd.mean()
-    avg_security_stamp = df.security_stamp_usd.mean()
-    avg_watermark = df.watermark_usd.mean()
-    stylized_usd = (frame_effects_usd + border_color_usd + flavor_text_usd + frame_usd + full_art_usd + highres_images_usd + lang_usd + layout_usd + promo_types_usd + security_stamp_usd + watermark_usd)
-    avg_stylized = df.stylized_usd.mean()
-    return f'The average USD price of stylized cards is ${round(avg_stylized, 2)}'
-    
-# , and normal cards is ${round(avg_first_prints, 2)}. The difference in average price is ${round((avg_stylized - avg_stylized),2)}.'
-
-#-----------------------------------------------------------------------------#
-
-def stylized_vs_normals_viz(df):
-    '''
-    Creates a bar plot for columns in the dataframe for reprints or first printings.
-    '''
-    plt.figure(figsize = (30,15))
-    sns.barplot(x = 'reprint', y = 'usd', data = df)
-    plt.title('Difference in Average Price of Reprints and First Printings')
-    plt.xlabel('Reprints or First Printings')
-    plt.ylabel('Price in $USD')
-    plt.xticks([0, 1],['First Printings', 'Reprints'])
-    return plt.show()
-
-#-----------------------------------------------------------------------------#    
-
-def stylized_or_not_viz(df):
-    '''
-    Combines explore functions for question one visualization
-    '''
-    df = add_columns_with_usd_prices_for_styles(df)
-    diff = avg_stylized_and_normal_printings_and_diff(df)
-    viz = stylized_vs_normals_viz(df)
-    return viz, diff
-
-#-----------------------------------------------------------------------------#
-
-def hypothesis_test_stylized_or_not(df):
-    '''
-    Hypothesis testing using Two-sample T-Test with a 95% confidence interval.
-    '''
-    # Sets alpha to 0.05 for 95% Confidence Interval
-    α = 0.05
-    
-    print(f'Variance for non-foil only cards is {round(df.reprints_usd.var(), 3)}.')
-    print(f'Variance for cards with both foil and non-foil cards is {round(df.first_prints_usd.var(), 3)}.')
-
-    # T-Test returning t and p values ignoring nan values
-    t, p = stats.ttest_ind(df.first_prints_usd, df.reprints_usd, equal_var = False, nan_policy = 'omit')
-    
-    # Prints statement for t-statistic and p-value
-    if (t < 0) & (p/2 < α):
-        print(f'The t-statistic is {round(t,3)} less than 0, and the p-value of {(p/2):.3e} is statistically significant.')
-    elif (t < 0) & (p/2 > α):
-        print(f'The t-statistic is {round(t,3)} less than 0, but the p-value of {(p/2):.3e} is not statistically significant.')
-    elif (t > 0) & (p/2 < α):
-        print(f'The t-statistic is {round(t,3)} more than 0, but the p-value of {(p/2):.3e} is statistically significant.')
-    else:
-        print(f'The t-statistic is {round(t,3)} more than 0, and the p-value of {(p/2):.3e} is not statistically significant.')
      
     # Prints statement for either accepting or rejecting the Null Hypothesis
     if p/2 < α:
