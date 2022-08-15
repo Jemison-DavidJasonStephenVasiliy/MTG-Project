@@ -86,28 +86,28 @@ def get_legalites_chart(df):
 
 def hypothesis_test_legalities(df, alpha = 0.05):
     '''
-    One sample T-Test.
+    A one sample T-Test for legalities.
     '''
     t, p = stats.ttest_1samp(df.usd, df[df.standard == "legal"].usd.mean())
     print(t, p/2, alpha)
 
     if p/2 > alpha:
-        print("We fail to reject the null hypothesis")
+        print("We fail to reject the null hypothesis.")
     elif t < 0:
-        print("We fail to reject the null hypothesis")
+        print("We fail to reject the null hypothesis.")
     else:
-        print("We reject the null hypothesis")
+        print("We reject the null hypothesis.")
     
 #-----------------------------------------------------------------------------#
 
 def top_7_sets(df):
     '''
-    NEEDS DOC STRING!
+    The top seven set releases according to USD price.
     '''
     top7 = df[(df['set_name'] == 'Mirrodin') | (df['set_name'] == "Throne of Eldraine") | (df['set_name'] == "Worldwake") | (df['set_name'] == "Exodus") | (df['set_name'] == "Urza\'s Saga") | (df['set_name'] == "Arabian Nights") | (df['set_name'] == "Limited Edition Alpha")]
     plt.figure(figsize=(10,5))
     sns.barplot(data = top7, x=top7.usd, y=top7.set_name)
-    plt.title('USD price by top 7 most popular sets')
+    plt.title('USD Price by Top 7 Most Popular Sets')
     plt.xlabel('USD Price')
     plt.ylabel('Set Name')
     plt.show()
@@ -116,23 +116,23 @@ def top_7_sets(df):
 
 def hypothesis_test_set_name(df, alpha = 0.05):
     '''
-    One sample T-Test.
+    A one sample T-Test for the Mirrodin set.
     '''
     t, p = stats.ttest_1samp(df.usd, df[df.set_name == "Mirrodin"].usd.mean())
     print(t, p/2, alpha)
 
     if p/2 > alpha:
-        print("We fail to reject the null hypothesis")
+        print("We fail to reject the null hypothesis.")
     elif t < 0:
-        print("We fail to reject the null hypothesis")
+        print("We fail to reject the null hypothesis.")
     else:
-        print("We reject the null hypothesis")
+        print("We reject the null hypothesis.")
 
 #-----------------------------------------------------------------------------#
 
 def cmc_by_price(df):
     '''
-    NEEDS DOC STRING!
+    The USD price of cards according to converted mana cost (CMC).
     '''
     plt.figure(figsize=(15,10))
     sns.barplot(data = df, x = df.cmc, y = df.usd)
@@ -145,7 +145,7 @@ def cmc_by_price(df):
 
 def hypothesis_test_cmc(df, alpha = 0.05):
     '''
-    One sample t-test.
+    A one sample t-test of cmc.
     '''
     cost_to_test = df['cmc'].unique().tolist()
     outputs = []
@@ -168,7 +168,7 @@ def hypothesis_test_cmc(df, alpha = 0.05):
 ### Stephen's explore data functions
 def vis_usd_by_released_at(df):
     '''
-    NEEDS DOC STRING!
+    Creates a line plot for the release dates according to USD price.
     '''
     plt.figure(figsize=(10,10))
     sns.lineplot(data=df[df['usd'] > 0], x='released_at', y='usd')
@@ -181,7 +181,7 @@ def vis_usd_by_released_at(df):
 
 def make_year_released_column(df):
     '''
-    NEEDS DOC STRING!
+    Creates a column for the year it released.
     '''
     df['year_released'] = df['released_at'].dt.year
     return df
@@ -190,13 +190,13 @@ def make_year_released_column(df):
 
 def vis_usd_by_year(df):
     '''
-    NEEDS DOC STRING!
+    The USD price by year.
     '''
     df = make_year_released_column(df)
     plt.figure(figsize=(10,10))
     sns.barplot(data=df[df['usd'] > 0], x='year_released', y='usd')
-    plt.title('USD price by year released')
-    plt.xlabel('Year released')
+    plt.title('USD Price by Year Released')
+    plt.xlabel('Year Released')
     plt.ylabel('USD Price')
     plt.show()
     
@@ -204,7 +204,7 @@ def vis_usd_by_year(df):
 
 def hypothesis_test_years(df, alpha = 0.05):
     '''
-    NEEDS DOC STRING!
+    A one-sample T-Test for year released.
     '''
     years_to_test = df['year_released'].unique().tolist()
     outputs = []
@@ -226,7 +226,7 @@ def hypothesis_test_years(df, alpha = 0.05):
 
 def make_card_type_column(df):
     '''
-    NEEDS DOC STRING!
+    Creates columns  based on the different card type lines.
     '''
     card_cats = ['Card', 'Vanguard', 'Plane', 'Creature', 'Land', 'Enchantment', 'Artifact', 'Sorcery', 'Instant', 'Legendary', 'Token']
     df['card_type'] = 'other_type'
@@ -237,12 +237,12 @@ def make_card_type_column(df):
 
 def vis_by_card_type(df):
     '''
-    NEEDS DOC STRING!
+    Creates a bar plot for showing the USD price according to basic card type.
     '''
     df = make_card_type_column(df)
     plt.figure(figsize=(10,10))
     sns.barplot(data=df[df['usd'] > 0], y='card_type', x='usd')
-    plt.title('USD price by basic card type')
+    plt.title('USD Price by Basic Card Type')
     plt.xlabel('USD Price')
     plt.ylabel('Basic Card Type')
     plt.show()
@@ -251,7 +251,7 @@ def vis_by_card_type(df):
 
 def hypothesis_test_card_type(df, alpha = 0.05):
     '''
-    NEEDS DOC STRING!
+    A one-sample T-test for card types.
     '''
     card_types_to_test = df['card_type'].unique().tolist()
     outputs = []
@@ -274,7 +274,7 @@ def hypothesis_test_card_type(df, alpha = 0.05):
 
 def make_games_boolean_columns(df):
     '''
-    NEEDS DOC STRING!
+    Creates boolean columns for the different values for 'games'.
     '''
     df_new = df[['id', 'usd', 'name', 'games']].copy()
     games_values = []
@@ -288,7 +288,7 @@ def make_games_boolean_columns(df):
 
 def vis_game_type(df):
     '''
-    NEEDS DOC STRING!
+    Creates a bar plot showing USD prices in relation to game types.
     '''
     games_df = make_games_boolean_columns(df)
     bool_columns = games_df.select_dtypes(include=bool).columns
@@ -302,7 +302,7 @@ def vis_game_type(df):
 
 def vis_game_type_by_combo(df):
     '''
-    NEEDS DOC STRING!
+    Creates a bar plot showing USD prices in relation to combinations of game types.
     '''
     df_new = df[['id', 'usd', 'name', 'games']].copy()
     df_new['games_str'] = df_new['games'].apply(lambda r : ' '.join(r))
@@ -315,7 +315,7 @@ def vis_game_type_by_combo(df):
 
 def hypothesis_test_game_type(df, alpha = 0.05):
     '''
-    NEEDS DOC STRING!
+    A one-sample T-test for game types.
     '''
     games_df = make_games_boolean_columns(df)
     bool_columns = games_df.select_dtypes(include=bool).columns
@@ -339,7 +339,7 @@ def hypothesis_test_game_type(df, alpha = 0.05):
 
 def hypothesis_test_game_type_combinations(df, alpha = 0.05):
     '''
-    NEEDS DOC STRING!
+    A one-sample T-test for combinations of game types.
     '''
     games_df = df[['id', 'usd', 'name', 'games']].copy()
     games_df['games_str'] = games_df['games'].apply(lambda r : ' '.join(r))
@@ -364,7 +364,7 @@ def hypothesis_test_game_type_combinations(df, alpha = 0.05):
 
 def viz_rarity_price(df):
     '''
-    NEEDS DOC STRING!
+    A bar plot showing USD price by card rarity.
     '''
     plt.figure(figsize=(10,10))
     sns.barplot(data = df, x = 'rarity', y = 'usd', palette = sns.color_palette())
@@ -377,7 +377,7 @@ def viz_rarity_price(df):
 
 def viz_card_type_rarity(df):
     '''
-    NEEDS DOC STRING!
+    A count plot of card rarities vs card types.
     '''
     plt.figure(figsize=(10,10))
     sns.countplot(data = df, x = 'rarity', hue = 'card_type', palette = sns.color_palette())
@@ -389,7 +389,7 @@ def viz_card_type_rarity(df):
 
 def viz_rare_uncommon_card_type_prices(df):
     '''
-    NEEDS DOC STRING!
+    Shows a bar plot for card rarities & types by USD price.
     '''
     plt.figure(figsize=(10,10))
     sns.barplot(data = df[df['rarity'].isin(['rare', 'uncommon', 'mythic'])], x = 'rarity', y= 'usd', hue = 'card_type', palette = sns.color_palette())
@@ -402,7 +402,7 @@ def viz_rare_uncommon_card_type_prices(df):
 
 def rarity_card_type_hypothesis_tests(df, alpha = 0.05):
     '''
-    NEEDS DOC STRING!
+    A one-sample T-test for card rarities & types.
     '''
     outputs = []
     rarities_to_test = ['rare', 'uncommon', 'mythic']
@@ -482,7 +482,7 @@ def only_foil_vs_both_versions_viz(df):
 
 def nonfoil_only_or_not_viz(df):
     '''
-    Combines explore functions for question one visualization
+    Combines explore functions for visualization of non-foil only and cards with both foil and non-foil versions.
     '''
     df = add_nonfoil_only_and_both_foil_and_nonfoil_columns(df)
     df = add_columns_with_usd_prices_for_nonfoil_cards(df)
@@ -517,9 +517,9 @@ def hypothesis_test_foil_vs_nonfoil(df):
      
     # Prints statement for either accepting or rejecting the Null Hypothesis
     if p/2 < α:
-        print("We reject the Null Hypothesis")
+        print("We reject the null hypothesis.")
     else:
-        print("We fail to reject the Null Hypothesis")
+        print("We fail to reject the null hypothesis.")
     return
           
 #-----------------------------------------------------------------------------#
@@ -563,7 +563,7 @@ def avg_reprints_and_first_printings_and_diff(df):
 
 def reprint_or_not_viz(df):
     '''
-    Combines explore functions for reprint visualization
+    Combines explore functions for visualization of reprints.
     '''
     df = add_columns_with_usd_prices_for_reprints_and_first_printings(df)
     diff = avg_reprints_and_first_printings_and_diff(df)
@@ -597,9 +597,9 @@ def hypothesis_test_reprint_or_not(df):
      
     # Prints statement for either accepting or rejecting the Null Hypothesis
     if p/2 < α:
-        print("We reject the Null Hypothesis")
+        print("We reject the null hypothesis.")
     else:
-        print("We fail to reject the Null Hypothesis")
+        print("We fail to reject the null hypothesis.")
     return
 
 #=============================================================================#
@@ -612,9 +612,9 @@ def vis_artist_by_usd(train):
     train2 = train.sort_values(by=['usd'], ascending=False,)[:100]
     plt.figure(figsize=(10,10))
     sns.barplot(data=train2, x='usd', y='artist')
-    plt.title('Rarity vs Artist/USD price')
-    plt.xlabel('USD price')
-    plt.ylabel('Artist name')
+    plt.title('Rarity vs Artist/USD Price')
+    plt.xlabel('USD Price')
+    plt.ylabel('Artist Name')
     plt.show()
 
 #-----------------------------------------------------------------------------#
@@ -625,9 +625,9 @@ def vis_rarity_by_usd(train):
     '''
     plt.figure(figsize=(10,10))
     sns.barplot(data=train, x='usd', y='rarity')
-    plt.title('Median price: Rarity vs USD price')
-    plt.xlabel('USD price')
-    plt.ylabel('Artist name')
+    plt.title('Median price: Rarity vs USD Price')
+    plt.xlabel('USD Price')
+    plt.ylabel('Artist Name')
     plt.show()
 
 #-----------------------------------------------------------------------------#
@@ -640,8 +640,8 @@ def vis_artist_rarity_usd(df):
     plt.figure(figsize=(10,10))
     sns.barplot(data=train2, x='usd', y='artist', hue='rarity')
     plt.title('Rarity vs Artist/USD price')
-    plt.xlabel('USD price')
-    plt.ylabel('Artist name')
+    plt.xlabel('USD Price')
+    plt.ylabel('Artist Name')
     plt.show()
 
 #-----------------------------------------------------------------------------#
@@ -666,8 +666,8 @@ def usd_rarity_set_type_total(train):
     plt.figure(figsize=(10,10))
     sns.barplot(data=train2, x='usd', y='set_type', hue='rarity', estimator=sum)
     plt.title('Price vs Set_type/Rarity')
-    plt.xlabel('USD price')
-    plt.ylabel('Set_type')
+    plt.xlabel('USD Price')
+    plt.ylabel('Set Type')
     plt.show()
 
 #=============================================================================#
