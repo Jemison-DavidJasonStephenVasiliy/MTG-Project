@@ -425,6 +425,42 @@ def rarity_card_type_hypothesis_tests(df, alpha = 0.05):
             outputs.append(output)
     return pd.DataFrame(outputs).sort_values('reject_null', ascending=False).head(15)
 
+#-----------------------------------------------------------------------------#
+
+def viz_lang_column_usd(df):
+    '''
+    Shows a bar plot for language types by USD price.
+    '''
+    plt.figure(figsize=(10,10))
+    sns.barplot(data = df, x = 'lang', y = 'usd')
+    plt.title('Card USD Price by Language')
+    plt.xlabel('Language Type')
+    plt.ylabel('USD Price')
+    plt.show()
+
+#-----------------------------------------------------------------------------#
+
+def lang_hypothesis_test(df, alpha = 0.05):
+    '''
+    A one-sample T-test for types of card languages.
+    '''
+    outputs = []
+    lang_types = df['lang'].unique().tolist()
+    overall_mean = df['usd'].mean()
+    for lang_type in lang_types:
+        in_sample = df[df['lang'] == lang_type]['usd']
+        t, p = stats.ttest_1samp(in_sample, overall_mean)
+        output = {
+            'langauge':lang_type,
+            'overall_mean':overall_mean,
+            'legality_mean':in_sample.mean(),
+            't_value':t,
+            'p_value':p,
+            'reject_null': t > 0 and p/2 < alpha
+        } 
+        outputs.append(output)
+    return pd.DataFrame(outputs).sort_values('reject_null', ascending=False)
+
 #=============================================================================#
 
 ### Jason's final notebook explore functions
